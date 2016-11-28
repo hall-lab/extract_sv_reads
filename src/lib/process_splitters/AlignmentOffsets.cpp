@@ -2,7 +2,6 @@
 
 #include <boost/format.hpp>
 
-#include <iostream>
 #include <stdexcept>
 #include <string.h>
 

@@ -2,7 +2,14 @@
 
 #include <sam.h>
 
+#include <boost/format.hpp>
+
 #include <stdint.h>
+#include <stdexcept>
+#include <string.h>
+
+using boost::format;
+
 
 // This code from diagnose_dups
 namespace cigar {
@@ -32,8 +39,8 @@ namespace cigar {
             case 'B':
                 return 9;
             default:
-                //XXX Should this just be an exception? I think so
-                return -1;
+                throw std::runtime_error(str(format(
+                                "Unsupported CIGAR character: %1%") % code));
         }
     }
 
