@@ -46,3 +46,11 @@ TEST(TestAlignmentOffsets, update_offset_invalid_cigar) {
     AlignmentOffsets data;
     EXPECT_THROW(data.update_offset(100, 3), std::runtime_error);
 }
+
+TEST(TestAlignmentOffsets, create_from_text_string) {
+    AlignmentOffsets data("2H5S10M2D5M3I5M4S");
+    EXPECT_EQ(data.sclip, 7);
+    EXPECT_EQ(data.eclip, 4);
+    EXPECT_EQ(data.raLen, 22);
+    EXPECT_EQ(data.qaLen, 23);
+}
