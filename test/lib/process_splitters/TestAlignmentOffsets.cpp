@@ -54,3 +54,20 @@ TEST(TestAlignmentOffsets, create_from_text_string) {
     EXPECT_EQ(data.raLen, 22);
     EXPECT_EQ(data.qaLen, 23);
 }
+
+TEST(TestAlignmentOffsets, create_from_bam_cigar) {
+    const uint32_t cigar[8] = { bam_cigar_gen(2, BAM_CHARD_CLIP)
+        , bam_cigar_gen(5, BAM_CSOFT_CLIP)
+        , bam_cigar_gen(10, BAM_CMATCH)
+        , bam_cigar_gen(2, BAM_CDEL)
+        , bam_cigar_gen(5, BAM_CMATCH)
+        , bam_cigar_gen(3, BAM_CINS)
+        , bam_cigar_gen(5, BAM_CMATCH)
+        , bam_cigar_gen(4, BAM_CSOFT_CLIP)
+    };
+    AlignmentOffsets data(cigar, 8);
+    EXPECT_EQ(data.sclip, 7);
+    EXPECT_EQ(data.eclip, 4);
+    EXPECT_EQ(data.raLen, 22);
+    EXPECT_EQ(data.qaLen, 23);
+}
