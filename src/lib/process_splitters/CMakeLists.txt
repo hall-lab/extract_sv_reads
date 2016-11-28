@@ -4,6 +4,7 @@ set(SOURCES
     AlignmentOffsets.hpp
     AlignmentOffsets.cpp
     Utility.hpp
+    Utility.cpp
     Parse.hpp
 )
 
