@@ -70,5 +70,5 @@ struct AlignmentOffsets {
         }
     }
 
-    inline void update_offset(int32_t const& opcode, uint32_t const& oplen);
+    void update_offset(int32_t const& opcode, uint32_t const& oplen);
 };
