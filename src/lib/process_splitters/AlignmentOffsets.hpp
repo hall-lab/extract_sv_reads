@@ -21,6 +21,14 @@ struct AlignmentOffsets {
     uint32_t eclip;
     bool first;
 
+    AlignmentOffsets()
+        : raLen(0)
+        , qaLen(0)
+        , sclip(0)
+        , eclip(0)
+        , first(true)
+    {}
+
     AlignmentOffsets(char const* cigar)
         : raLen(0)
         , qaLen(0)
