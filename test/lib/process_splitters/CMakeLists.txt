@@ -9,4 +9,5 @@ include_directories(${GTEST_INCLUDE_DIRS})
 add_unit_tests(TestProcessSplittersLib
     TestParse.cpp
     TestAlignmentOffsets.cpp
+    TestAlignment.cpp
     )
