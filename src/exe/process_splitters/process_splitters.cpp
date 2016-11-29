@@ -5,6 +5,7 @@
 
 #include <string>
 #include <iostream>
+#include <stdlib.h>
 
 #define MIN_NON_OVERLAP 20
 #define MAX_UNMAPPED_BASES 50
@@ -12,8 +13,10 @@
 
 int main(int argc, char **argv)
 {
-    if (argc != 4)
+    if (argc != 4) {
         std::cerr << "usage:\tprocess_splitters <bam> <split out> <discord out>" << std::endl;
+        exit(1);
+    }
 
     char *bam_file_name = argv[1];
     char *split_file_name = argv[2];
@@ -24,12 +27,10 @@ int main(int argc, char **argv)
     samFile *split = sam_open(split_file_name, "wb");
 
     samFile *in = sam_open(bam_file_name, "rb");
-    if(in == NULL)
+    if(in == NULL) {
         std::cerr << "Unable to open BAM/SAM file." << std::endl;
-
-    hts_idx_t *idx = sam_index_load(in, bam_file_name);
-    if(idx == NULL)
-        std::cerr << "Unable to open BAM/SAM index." << std::endl;
+        exit(1);
+    }
 
     bam_hdr_t *hdr = sam_hdr_read(in);
 
