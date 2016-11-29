@@ -70,7 +70,7 @@ struct Alignment {
             
         offsets = AlignmentOffsets(cigar.c_str());
 
-        if (tok.skip(2) != 2) {
+        if (tok.skip(1) != 1u) {
             throw std::runtime_error(str(format(
                             "Truncated SA tag %1%"
                             ) % sa_tag));
