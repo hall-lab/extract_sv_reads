@@ -1,6 +1,7 @@
 project(process_splitters)
 
 set(SOURCES
+    Alignment.hpp
     AlignmentOffsets.hpp
     AlignmentOffsets.cpp
     Utility.hpp

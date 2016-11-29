@@ -1,9 +1,15 @@
 #pragma once
 
 #include "AlignmentOffsets.hpp"
+#include "Parse.hpp"
+
+#include <boost/format.hpp>
 
 #include <algorithm>
 #include <string.h>
+#include <stdexcept>
+
+using boost::format;
 
 struct Alignment {
     AlignmentOffsets offsets;
@@ -12,7 +18,7 @@ struct Alignment {
     int SQO;
     int EQO;
     char strand;
-    char *chrom;
+    std::string chrom;
 
     Alignment()
         : offsets()
@@ -21,28 +27,70 @@ struct Alignment {
         , SQO(0)
         , EQO(0)
         , strand(0)
-        , chrom(NULL)
+        , chrom()
     {}
 
-    Alignment(bam1_t *aln) {
+    Alignment(bam1_t const* aln, bam_hdr_t const* hdr) {
         rapos = aln->core.pos + 1;
+        chrom = std::string(hdr->target_name[aln->core.tid]);
         offsets = AlignmentOffsets(bam_get_cigar(aln), aln->core.n_cigar);
         if (bam_is_rev(aln)) {
             strand = '-';
+        }
+        else {
+            strand = '+';
+        }
+        calculate_additional_offsets();
+    }
+
+    Alignment(char const* sa_tag, char const* end) {
+        SimpleTokenizer tok(sa_tag, end, ',');
+
+        if (!tok.extract(chrom)) {
+            throw std::runtime_error(str(format(
+                            "Error parsing chromomsome name from SA tag %1%"
+                            ) % sa_tag));
+        }
+        if (!tok.extract(rapos)) {
+            throw std::runtime_error(str(format(
+                            "Error parsing position from SA tag %1%"
+                            ) % sa_tag));
+        }
+        if (!tok.extract(strand)) {
+            throw std::runtime_error(str(format(
+                            "Error parsing strand from SA tag %1%"
+                            ) % sa_tag));
+        }
+        std::string cigar;
+        if (!tok.extract(cigar)) {
+            throw std::runtime_error(str(format(
+                            "Error parsing cigar from SA tag %1%"
+                            ) % sa_tag));
+        }
+            
+        offsets = AlignmentOffsets(cigar.c_str());
+
+        if (tok.skip(2) != 2) {
+            throw std::runtime_error(str(format(
+                            "Truncated SA tag %1%"
+                            ) % sa_tag));
+        }
+        calculate_additional_offsets();
+    }
+
+    void calculate_additional_offsets() {
+        if (strand == '-') {
             pos = rapos + offsets.raLen + offsets.eclip - 1;
             SQO = offsets.eclip;
             EQO = offsets.eclip + offsets.qaLen - 1;
         }
         else {
-            strand = '+';
             pos = rapos - offsets.sclip;
             SQO = offsets.sclip;
             EQO = offsets.sclip + offsets.qaLen - 1;
         }
     }
 
-    //Alignment(char *sa_tag);
-    
     int start_diagonal() const {
         return rapos - offsets.sclip;
     }
@@ -72,7 +120,7 @@ struct Alignment {
     }
 
     friend bool should_check(Alignment const& left, Alignment const& right) {
-        return (strcmp(left.chrom, right.chrom) == 0 && left.strand == right.strand);
+        return (left.chrom == right.chrom && left.strand == right.strand);
     }
         
 };
