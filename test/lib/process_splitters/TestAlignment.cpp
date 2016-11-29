@@ -23,9 +23,9 @@ class TestAlignment : public ::testing::Test {
 
 TEST_F(TestAlignment, create_from_bam) {
     Alignment test_obj(record1, records.header);
-    ASSERT_EQ(test_obj.chrom, "chr21");
-    ASSERT_EQ(test_obj.strand, '+');
-    ASSERT_EQ(test_obj.rapos, 44877125u);
+    ASSERT_EQ("chr21", test_obj.chrom);
+    ASSERT_EQ('+', test_obj.strand);
+    ASSERT_EQ(44877125u, test_obj.rapos);
     // TODO add additional tests once we're certain about the values
 }
 
@@ -35,9 +35,10 @@ TEST_F(TestAlignment, create_from_sa) {
     char const* beg = data.data();
     char const* end = data.data() + data.size() - 1; //subtracting off the semicolon
     Alignment test_obj(beg, end);
-    ASSERT_EQ(test_obj.chrom, "chr21");
-    ASSERT_EQ(test_obj.strand, '+');
-    ASSERT_EQ(test_obj.rapos, 44877125u);
+    ASSERT_EQ("chr21", test_obj.chrom);
+    ASSERT_EQ('+', test_obj.strand);
+    ASSERT_EQ(44877125u, test_obj.rapos);
+    ASSERT_EQ(41u, test_obj.offsets.raLen);
 }
 
 TEST_F(TestAlignment, create_from_truncated_sa) {
@@ -51,15 +52,31 @@ TEST_F(TestAlignment, create_from_truncated_sa) {
 }
 
 TEST_F(TestAlignment, calculate_additional_offsets) {
+    AlignmentOffsets data("2H5S10M2D5M3I5M4S");
+    Alignment test_obj;
+    test_obj.rapos = 50u;
+    test_obj.strand = '+';
+    test_obj.offsets = data;
+    test_obj.calculate_additional_offsets();
+    ASSERT_EQ(43u, test_obj.pos);
+    ASSERT_EQ(test_obj.SQO, 7);
+    ASSERT_EQ(test_obj.EQO, 29);
 
+    test_obj.strand = '-';
+    test_obj.calculate_additional_offsets();
+    ASSERT_EQ(75u, test_obj.pos);
+    ASSERT_EQ(test_obj.SQO, 4);
+    ASSERT_EQ(test_obj.EQO, 26);
 }
 
 TEST_F(TestAlignment, start_diagonal) {
-
+    Alignment a1(record1, records.header);
+    ASSERT_EQ(44877125 - 101, a1.start_diagonal());
 }
 
 TEST_F(TestAlignment, end_diagonal) {
-
+    Alignment a1(record1, records.header);
+    ASSERT_EQ((44877125 + 41) - (101 + 41), a1.end_diagonal());
 }
 
 TEST_F(TestAlignment, mno) {
