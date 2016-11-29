@@ -37,6 +37,18 @@ TEST(TestParse, negative_int) {
     EXPECT_EQ(beg, data.data() + 4);
 }
 
+TEST(TestParse, char) {
+    std::string data = "-123abc";
+    char value = 0;
+
+    char const* beg = data.data();
+    char const* end = data.data() + data.size();
+
+    EXPECT_TRUE(auto_parse(beg, end, value));
+    EXPECT_EQ('-', value);
+    EXPECT_EQ(beg, data.data() + 1);
+}
+
 TEST(TestParse, SimpleTokenizer) {
     std::string data = "hi:2:u:4tw";
     SimpleTokenizer tok(data, ':');

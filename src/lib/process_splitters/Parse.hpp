@@ -37,6 +37,13 @@ bool auto_parse(Iter& beg, Iter const& end, std::string& value) {
     return true;
 }
 
+template<typename Iter>
+bool auto_parse(Iter& beg, Iter const& end, char& value) {
+    value = *beg;
+    ++beg;
+    return true;
+}
+
 // Simple string tokenization
 struct SimpleTokenizer {
     SimpleTokenizer(char const* beg, char const* end, char delim)
