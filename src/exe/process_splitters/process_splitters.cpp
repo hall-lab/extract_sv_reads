@@ -76,9 +76,9 @@ int main(int argc, char **argv)
                     continue;
 
                 if (should_check(*left, *right)) {
-                    if ((abs(insert_size(*left, *right) < MIN_INDEL_SIZE)
+                    if ((abs(insert_size(*left, *right)) < MIN_INDEL_SIZE)
                                 || ((desert(*left, *right) > 0)
-                                    && (desert(*left, *right) - (int) std::max(0, insert_size(*left, *right))) > MAX_UNMAPPED_BASES))) {
+                                    && (desert(*left, *right) - (int) std::max(0, insert_size(*left, *right))) > MAX_UNMAPPED_BASES)) {
                         continue;
                     }
                 }
@@ -95,7 +95,6 @@ int main(int argc, char **argv)
     }
 
     bam_destroy1(aln);
-    hts_idx_destroy(idx);
     bam_hdr_destroy(hdr);
     sam_close(in);
     sam_close(disc);
