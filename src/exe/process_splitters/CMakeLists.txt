@@ -7,6 +7,7 @@ set(SOURCES
 set(EXECUTABLE_NAME process-splitters)
 xadd_executable(${EXECUTABLE_NAME} ${SOURCES})
 target_link_libraries(${EXECUTABLE_NAME}
+    process_splitters
     ${HTSlib_LIBRARIES}
     ${Boost_LIBRARIES})
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES PACKAGE_OUTPUT_NAME ${EXECUTABLE_NAME}${EXE_VERSION_SUFFIX})
