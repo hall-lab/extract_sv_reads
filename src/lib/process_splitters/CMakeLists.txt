@@ -7,6 +7,8 @@ set(SOURCES
     Utility.hpp
     Utility.cpp
     Parse.hpp
+    Options.hpp
+    Options.cpp
 )
 
 xadd_library(process_splitters ${SOURCES})
