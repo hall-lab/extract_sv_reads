@@ -22,11 +22,11 @@ int main(int argc, char **argv)
     char *split_file_name = argv[2];
     char *disc_file_name = argv[3];
 
-    samFile *disc = sam_open(disc_file_name, "wb");
+    htsFile *disc = hts_open(disc_file_name, "wb");
 
-    samFile *split = sam_open(split_file_name, "wb");
+    htsFile *split = hts_open(split_file_name, "wb");
 
-    samFile *in = sam_open(bam_file_name, "rb");
+    htsFile *in = hts_open(bam_file_name, "r");
     if(in == NULL) {
         std::cerr << "Unable to open BAM/SAM file." << std::endl;
         exit(1);
@@ -68,8 +68,8 @@ int main(int argc, char **argv)
                 Alignment const* right = &second;
 
                 if (left->SQO > right->SQO) {
-                    left = &first;
-                    right = &second;
+                    right = &first;
+                    left = &second;
                 }
 
                 if (mno(*left, *right) < MIN_NON_OVERLAP) 
