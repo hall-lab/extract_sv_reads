@@ -12,10 +12,6 @@
 #include <stdlib.h>
 #include <stdexcept>
 
-#define MIN_NON_OVERLAP 20
-#define MAX_UNMAPPED_BASES 50
-#define MIN_INDEL_SIZE 50
-
 using boost::format;
 namespace {
     void run(Options const& opts) {
@@ -56,15 +52,21 @@ namespace {
         r = sam_hdr_write(split, hdr);
 
         bam1_t *aln = bam_init1();
+        int discordant_flag = BAM_FPROPER_PAIR | BAM_FMUNMAP;
 
+        int skip_flag = BAM_FUNMAP | BAM_FQCFAIL | BAM_FSECONDARY;
+        if (opts.exclude_dups) {
+            skip_flag = skip_flag | BAM_FDUP;
+        }
 
         while(sam_read1(in, hdr, aln) >= 0) {
-            if (((aln->core.flag) & 1294) == 0)
-                r = sam_write1(disc, hdr, aln);
-
-            if (aln->core.flag & (BAM_FUNMAP | BAM_FQCFAIL | BAM_FDUP)) {
+            if (aln->core.flag & skip_flag) {
                 continue;
             }
+
+            if (((aln->core.flag) & discordant_flag) == 0)
+                r = sam_write1(disc, hdr, aln);
+
             uint8_t *sa = bam_aux_get(aln, "SA");
 
             if (sa != 0) {
@@ -75,7 +77,9 @@ namespace {
                 SimpleTokenizer tok(beg, end, ';');
                 std::string first_sa;
                 if (!tok.extract(first_sa)) {
-                    //TODO THROW
+                    throw std::runtime_error(str(format(
+                                    "Error parsing SA tag: %1%"
+                                    ) % sa_string));
                 }
 
                 if (tok.next_delim() == end) {
@@ -90,13 +94,13 @@ namespace {
                         left = &second;
                     }
 
-                    if (mno(*left, *right) < MIN_NON_OVERLAP) 
+                    if (mno(*left, *right) < opts.min_non_overlap) 
                         continue;
 
                     if (should_check(*left, *right)) {
-                        if ((abs(insert_size(*left, *right)) < MIN_INDEL_SIZE)
+                        if ((abs(insert_size(*left, *right)) < opts.min_indel_size)
                                 || ((desert(*left, *right) > 0)
-                                    && (desert(*left, *right) - (int) std::max(0, insert_size(*left, *right))) > MAX_UNMAPPED_BASES)) {
+                                    && (desert(*left, *right) - (int) std::max(0, insert_size(*left, *right))) > opts.max_unmapped_bases)) {
                             continue;
                         }
                     }
