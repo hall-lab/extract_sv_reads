@@ -2,6 +2,7 @@
 #include "process_splitters/Alignment.hpp"
 #include "process_splitters/Options.hpp"
 
+#include <hts.h>
 #include <sam.h>
 
 #include <boost/format.hpp>
@@ -40,7 +41,16 @@ namespace {
                             ) % opts.input_file));
         }
 
+        if (!opts.reference.empty()) {
+            if (hts_set_opt(in, CRAM_OPT_REFERENCE, opts.reference.c_str()) != 0) {
+                throw std::runtime_error(str(format(
+                                "Unable to use reference %1%"
+                                ) % opts.reference));
+            }
+        }
+
         bam_hdr_t *hdr = sam_hdr_read(in);
+
 
         int r = sam_hdr_write(disc, hdr);
         r = sam_hdr_write(split, hdr);
