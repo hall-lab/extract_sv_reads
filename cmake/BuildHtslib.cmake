@@ -24,10 +24,10 @@ if (NOT ZLIB_FOUND)
 endif (NOT ZLIB_FOUND)
 
 ExternalDependency_Add(
-    htslib-1.2.1
+    htslib-1.3.2
     BUILD_BYPRODUCTS ${HTSLIB_LIB}
     ARGS
-        URL ${CMAKE_SOURCE_DIR}/vendor/htslib-1.2.1.tgz
+        URL ${CMAKE_SOURCE_DIR}/vendor/htslib-1.3.2.tgz
         SOURCE_DIR ${HTSLIB_ROOT}
         BINARY_DIR ${HTSLIB_ROOT}
         CONFIGURE_COMMAND echo "Building htslib, build log at ${HTSLIB_LOG}"
@@ -39,5 +39,5 @@ set(HTSlib_INCLUDE_DIRS ${ZLIB_INCLUDE_DIRS};${HTSLIB_ROOT}/htslib)
 set(HTSlib_LIBRARIES ${HTSLIB_LIB} m ${ZLIB_LIBRARIES})
 
 if (NOT ZLIB_FOUND)
-    add_dependencies(htslib-1.2.1 zlib)
+    add_dependencies(htslib-1.3.2 zlib)
 endif (NOT ZLIB_FOUND)
