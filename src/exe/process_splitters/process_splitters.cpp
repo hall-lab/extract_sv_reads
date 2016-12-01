@@ -52,7 +52,7 @@ namespace {
         r = sam_hdr_write(split, hdr);
 
         bam1_t *aln = bam_init1();
-        int discordant_flag = BAM_FPROPER_PAIR | BAM_FMUNMAP;
+        int discordant_flag = BAM_FPROPER_PAIR | BAM_FMUNMAP | BAM_FSUPPLEMENTARY;
 
         int skip_flag = BAM_FUNMAP | BAM_FQCFAIL | BAM_FSECONDARY;
         if (opts.exclude_dups) {
