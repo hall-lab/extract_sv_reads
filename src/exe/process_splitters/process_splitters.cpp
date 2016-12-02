@@ -1,6 +1,7 @@
 #include "process_splitters/Parse.hpp"
 #include "process_splitters/Alignment.hpp"
 #include "process_splitters/Options.hpp"
+#include "process_splitters/SamReader.hpp"
 
 #include <hts.h>
 #include <sam.h>
@@ -29,43 +30,23 @@ namespace {
                             "Unable to open %1% for writing"
                             ) % opts.splitter_output_file));
         }
-
-        htsFile *in = hts_open(opts.input_file.c_str(), "r");
-        if(in == NULL) {
-            throw std::runtime_error(str(format(
-                            "Unable to open input file %1%"
-                            ) % opts.input_file));
-        }
-
-        if (!opts.reference.empty()) {
-            if (hts_set_opt(in, CRAM_OPT_REFERENCE, opts.reference.c_str()) != 0) {
-                throw std::runtime_error(str(format(
-                                "Unable to use reference %1%"
-                                ) % opts.reference));
-            }
-        }
-
-        bam_hdr_t *hdr = sam_hdr_read(in);
-
-
-        int r = sam_hdr_write(disc, hdr);
-        r = sam_hdr_write(split, hdr);
-
-        bam1_t *aln = bam_init1();
-        int discordant_flag = BAM_FPROPER_PAIR | BAM_FMUNMAP | BAM_FSUPPLEMENTARY;
+        SamReader reader(opts.input_file.c_str(), opts.reference.c_str());
 
         int skip_flag = BAM_FUNMAP | BAM_FQCFAIL | BAM_FSECONDARY;
         if (opts.exclude_dups) {
             skip_flag = skip_flag | BAM_FDUP;
         }
+        reader.skip_flags(skip_flag);
 
-        while(sam_read1(in, hdr, aln) >= 0) {
-            if (aln->core.flag & skip_flag) {
-                continue;
-            }
+        int r = sam_hdr_write(disc, reader.header());
+        r = sam_hdr_write(split, reader.header());
 
+        bam1_t *aln = bam_init1();
+        int discordant_flag = BAM_FPROPER_PAIR | BAM_FMUNMAP | BAM_FSUPPLEMENTARY;
+
+        while(reader.next(aln)) {
             if (((aln->core.flag) & discordant_flag) == 0)
-                r = sam_write1(disc, hdr, aln);
+                r = sam_write1(disc, reader.header(), aln);
 
             uint8_t *sa = bam_aux_get(aln, "SA");
 
@@ -83,7 +64,7 @@ namespace {
                 }
 
                 if (tok.next_delim() == end) {
-                    Alignment first(aln, hdr);
+                    Alignment first(aln, reader.header());
                     Alignment second(first_sa.data(), first_sa.data() + first_sa.size());
 
                     Alignment const* left = &first;
@@ -111,14 +92,12 @@ namespace {
                     else
                         qname[0] = 'B'; 
 
-                    r = sam_write1(split, hdr, aln);
+                    r = sam_write1(split, reader.header(), aln);
                 }
             }
         }
 
         bam_destroy1(aln);
-        bam_hdr_destroy(hdr);
-        sam_close(in);
         sam_close(disc);
         sam_close(split);
     }
