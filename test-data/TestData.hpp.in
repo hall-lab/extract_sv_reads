@@ -20,7 +20,7 @@ namespace {
 
     static const std::string TEST_DATA_DIRECTORY = "@TEST_DATA_DIRECTORY@";
     static const std::vector<TestBamInfo> TEST_BAMS = boost::assign::list_of
-        (TestBamInfo("splitter.bam", 2))
-        (TestBamInfo("splitter.cram", 2))
+        (TestBamInfo("new_splitter.bam", 2))
+        (TestBamInfo("new_splitter.cram", 2))
         ;
 }

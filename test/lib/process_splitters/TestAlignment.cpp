@@ -23,11 +23,11 @@ class TestAlignment : public ::testing::Test {
 
 TEST_F(TestAlignment, create_from_bam) {
     Alignment test_obj(record1, records.header);
-    ASSERT_EQ("chr13", test_obj.chrom);
+    ASSERT_EQ("2", test_obj.chrom);
     ASSERT_EQ('-', test_obj.strand);
-    ASSERT_EQ(16370152u, test_obj.rapos);
+    ASSERT_EQ(138665448u, test_obj.rapos);
     // TODO add additional tests once we're certain about the values
-    ASSERT_EQ(44u, test_obj.offsets.raLen);
+    ASSERT_EQ(74u, test_obj.offsets.raLen);
 }
 
 TEST_F(TestAlignment, create_from_sa) {
@@ -36,16 +36,16 @@ TEST_F(TestAlignment, create_from_sa) {
     char const* beg = data.data();
     char const* end = data.data() + data.size() - 1; //subtracting off the semicolon
     Alignment test_obj(beg, end);
-    ASSERT_EQ("chr13", test_obj.chrom);
+    ASSERT_EQ("2", test_obj.chrom);
     ASSERT_EQ('-', test_obj.strand);
-    ASSERT_EQ(16370152u, test_obj.rapos);
-    ASSERT_EQ(44u, test_obj.offsets.raLen);
+    ASSERT_EQ(138665448u, test_obj.rapos);
+    ASSERT_EQ(74u, test_obj.offsets.raLen);
 }
 
 TEST_F(TestAlignment, create_from_truncated_sa) {
     uint8_t *sa_ptr = bam_aux_get(record2, "SA") + 1; //skipping the type field
-    std::string data((char const*) sa_ptr, 26); //truncate the string
-    ASSERT_EQ(data, "chr13,16370152,-,107S44M,0");
+    std::string data((char const*) sa_ptr, 23); //truncate the string
+    ASSERT_EQ(data, "2,138665448,-,27S74M,60");
     char const* beg = data.data();
     char const* end = data.data() + data.size();
 
@@ -72,12 +72,12 @@ TEST_F(TestAlignment, calculate_additional_offsets) {
 
 TEST_F(TestAlignment, start_diagonal) {
     Alignment a1(record1, records.header);
-    ASSERT_EQ(16370152 - 107, a1.start_diagonal());
+    ASSERT_EQ(138665448 - 27, a1.start_diagonal());
 }
 
 TEST_F(TestAlignment, end_diagonal) {
     Alignment a1(record1, records.header);
-    ASSERT_EQ((16370152 + 44) - (107 + 44), a1.end_diagonal());
+    ASSERT_EQ((138665448 + 74) - (27 + 74), a1.end_diagonal());
 }
 
 TEST_F(TestAlignment, mno) {
@@ -88,7 +88,7 @@ TEST_F(TestAlignment, mno) {
     char const* end = data.data() + data.size() - 1; //subtracting off the semicolon
     Alignment a2(beg, end);
 
-    ASSERT_EQ(33, mno(a1, a2));
+    ASSERT_EQ(27, mno(a1, a2));
 }
 
 TEST_F(TestAlignment, desert) {
@@ -99,7 +99,7 @@ TEST_F(TestAlignment, desert) {
     char const* end = data.data() + data.size() - 1; //subtracting off the semicolon
     Alignment a2(beg, end);
 
-    ASSERT_EQ(74, desert(a1, a2));
+    ASSERT_EQ(-8, desert(a1, a2));
 }
 
 TEST_F(TestAlignment, insert_size) {
@@ -110,7 +110,7 @@ TEST_F(TestAlignment, insert_size) {
     char const* end = data.data() + data.size() - 1; //subtracting off the semicolon
     Alignment a2(beg, end);
 
-    ASSERT_EQ(894717, insert_size(a1, a2));
+    ASSERT_EQ(-21, insert_size(a1, a2));
 }
 
 TEST_F(TestAlignment, should_check) {
@@ -121,13 +121,12 @@ TEST_F(TestAlignment, should_check) {
     char const* end = data.data() + data.size() - 1; //subtracting off the semicolon
     Alignment a2(beg, end);
 
-    ASSERT_TRUE(should_check(a1, a2));
-
-    a2.strand = '+';
     ASSERT_FALSE(should_check(a1, a2));
 
-    a2.strand = '-';
-    a2.chrom = "chr2";
+    a1.strand = '+';
+    ASSERT_TRUE(should_check(a1, a2));
+
+    a2.chrom = "1";
     ASSERT_FALSE(should_check(a1, a2));
 }
 
