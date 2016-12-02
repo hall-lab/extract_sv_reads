@@ -21,7 +21,7 @@ class SamReader {
                                 "Failed to open input file %1%"
                                 ) % path));
             }
-            if (!reference) {
+            if (reference) {
                 if (hts_set_opt(_in, CRAM_OPT_REFERENCE, reference) != 0) {
                     throw std::runtime_error(str(format(
                                     "Unable to use reference %1%"
