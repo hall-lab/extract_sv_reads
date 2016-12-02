@@ -10,4 +10,5 @@ add_unit_tests(TestProcessSplittersLib
     TestParse.cpp
     TestAlignmentOffsets.cpp
     TestAlignment.cpp
+    TestSamReader.cpp
     )

@@ -9,6 +9,7 @@ set(SOURCES
     Parse.hpp
     Options.hpp
     Options.cpp
+    SamReader.hpp
 )
 
 xadd_library(process_splitters ${SOURCES})
