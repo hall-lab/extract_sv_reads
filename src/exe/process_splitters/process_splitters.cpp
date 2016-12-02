@@ -2,6 +2,7 @@
 #include "process_splitters/Alignment.hpp"
 #include "process_splitters/Options.hpp"
 #include "process_splitters/SamReader.hpp"
+#include "process_splitters/SamWriter.hpp"
 
 #include <hts.h>
 #include <sam.h>
@@ -17,19 +18,6 @@ using boost::format;
 namespace {
     void run(Options const& opts) {
 
-        htsFile *disc = hts_open(opts.discordant_output_file.c_str(), "wb");
-        if(disc == NULL) {
-            throw std::runtime_error(str(format(
-                            "Unable to open %1% for writing"
-                            ) % opts.discordant_output_file));
-        }
-
-        htsFile *split = hts_open(opts.splitter_output_file.c_str(), "wb");
-        if(split == NULL) {
-            throw std::runtime_error(str(format(
-                            "Unable to open %1% for writing"
-                            ) % opts.splitter_output_file));
-        }
         SamReader reader(opts.input_file.c_str(), opts.reference.c_str());
 
         int skip_flag = BAM_FUNMAP | BAM_FQCFAIL | BAM_FSECONDARY;
@@ -38,15 +26,15 @@ namespace {
         }
         reader.skip_flags(skip_flag);
 
-        int r = sam_hdr_write(disc, reader.header());
-        r = sam_hdr_write(split, reader.header());
+        SamWriter disc(opts.discordant_output_file.c_str(), "wb", reader.header());
+        SamWriter split(opts.splitter_output_file.c_str(), "wb", reader.header());
 
         bam1_t *aln = bam_init1();
         int discordant_flag = BAM_FPROPER_PAIR | BAM_FMUNMAP | BAM_FSUPPLEMENTARY;
 
         while(reader.next(aln)) {
             if (((aln->core.flag) & discordant_flag) == 0)
-                r = sam_write1(disc, reader.header(), aln);
+                disc.write(aln);
 
             uint8_t *sa = bam_aux_get(aln, "SA");
 
@@ -92,14 +80,12 @@ namespace {
                     else
                         qname[0] = 'B'; 
 
-                    r = sam_write1(split, reader.header(), aln);
+                    split.write(aln);
                 }
             }
         }
 
         bam_destroy1(aln);
-        sam_close(disc);
-        sam_close(split);
     }
 }
 
