@@ -18,7 +18,7 @@ using boost::format;
 namespace {
     void run(Options const& opts) {
 
-        SamReader reader(opts.input_file.c_str(), opts.reference.c_str());
+        SamReader reader(opts.input_file.c_str(), opts.reference.c_str(), opts.input_threads);
 
         int skip_flag = BAM_FUNMAP | BAM_FQCFAIL | BAM_FSECONDARY;
         if (opts.exclude_dups) {

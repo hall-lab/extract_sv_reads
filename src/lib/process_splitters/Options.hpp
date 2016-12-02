@@ -25,4 +25,6 @@ class Options {
         int min_non_overlap;
         int max_unmapped_bases;
         int min_indel_size;
+
+        int input_threads;
 };

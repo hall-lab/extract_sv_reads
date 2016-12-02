@@ -40,6 +40,7 @@ po::options_description Options::_options_desciption() {
         ("max-unmapped-bases", po::value<>(&max_unmapped_bases)->default_value(50), "maximum number of unaligned bases between two alignments to be included in the splitter file")
         ("min-indel-size", po::value<>(&min_indel_size)->default_value(50), "minimum structural variant feature size for split alignments to be included in the splitter file")
         ("min-non-overlap", po::value<>(&min_non_overlap)->default_value(20), "minimum number of non-overlapping base pairs between two alignments for a read to be included in the splitter file")
+        ("input-threads", po::value<>(&input_threads)->default_value(1), "number of threads to use for reading the input. Only useful for CRAM files")
         ;
     return desc;
 }

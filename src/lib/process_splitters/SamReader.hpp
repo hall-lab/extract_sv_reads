@@ -7,10 +7,11 @@
 
 #include <string>
 #include <stdexcept>
+#include <iostream>
 
 class SamReader {
     public:
-        SamReader(char const* path, char const* reference=NULL)
+        SamReader(char const* path, char const* reference=NULL, int nthreads=1)
             : _in(hts_open(path, "r"))
             , _required_flags(0)
             , _skip_flags(0)
@@ -21,11 +22,24 @@ class SamReader {
                                 "Failed to open input file %1%"
                                 ) % path));
             }
-            if (reference) {
+            if (reference && *reference != '\0') {
                 if (hts_set_opt(_in, CRAM_OPT_REFERENCE, reference) != 0) {
                     throw std::runtime_error(str(format(
                                     "Unable to use reference %1%"
                                     ) % reference));
+                }
+            }
+
+            if (nthreads > 1) {
+                if (_in->format.format != cram) {
+                    std::cerr << "Additional threads can only be used to read CRAM files. Proceeding with one thread...\n";
+                }
+                else {
+                    if (hts_set_threads(_in, nthreads) != 0) {
+                        throw std::runtime_error(str(format(
+                                        "Failed to use threads to read CRAM %1%"
+                                        ) % path));
+                    }
                 }
             }
 
@@ -45,7 +59,7 @@ class SamReader {
                 hts_close(_in);
             }
         }
-        
+
         bam_hdr_t* header() const {
             return _hdr;
         }
