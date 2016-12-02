@@ -45,6 +45,10 @@ class SamReader {
                 hts_close(_in);
             }
         }
+        
+        bam_hdr_t* header() const {
+            return _hdr;
+        }
 
         void required_flags(uint32_t flags) {
             _required_flags = flags;
