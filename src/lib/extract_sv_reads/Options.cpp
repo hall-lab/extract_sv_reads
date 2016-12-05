@@ -15,6 +15,11 @@ Options::Options(int argc, char** argv) {
     po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
     po::notify(vm);
 
+    if (!(vm.count("splitter") && vm.count("discordant"))) {
+        std::cerr << desc << std::endl;
+        exit(0);
+    }
+
     if (vm.count("help")) {
         std::cerr << desc << std::endl;
         exit(0);
