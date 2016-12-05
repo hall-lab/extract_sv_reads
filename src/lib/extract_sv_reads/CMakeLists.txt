@@ -10,6 +10,7 @@ set(SOURCES
     Options.hpp
     Options.cpp
     SamReader.hpp
+    BamTransform.hpp
 )
 
 xadd_library(extract_sv_reads ${SOURCES})

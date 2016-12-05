@@ -11,4 +11,5 @@ add_unit_tests(TestExtractSvReadsLib
     TestAlignmentOffsets.cpp
     TestAlignment.cpp
     TestSamReader.cpp
+    TestBamTransform.cpp
     )
