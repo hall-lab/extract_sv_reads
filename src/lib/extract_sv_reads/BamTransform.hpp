@@ -14,7 +14,7 @@ class BamTransformer {
         }
 
         std::size_t _seq_qual_bytes(bam1_t const* b) const {
-            // Total - pre-sequence bytes - sequence bytes - quality bytes
+            // sequence bytes + quality bytes
             return (((b->core.l_qseq + 1)>>1) + b->core.l_qseq);
         }
 
