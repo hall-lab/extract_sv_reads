@@ -10,6 +10,7 @@ class Options {
     private:
         po::options_description _options_desciption();
         po::positional_options_description _positional_description();
+        std::string usage();
 
     public:
         po::variables_map vm;

@@ -2,32 +2,39 @@
 
 #include "version.h"
 
+#include <string>
 #include <iostream>
 #include <cstdlib>
 #include <exception>
 
 namespace po = boost::program_options;
 
+std::string Options::usage() {
+    return "Usage: extract-sv-reads [-evh] [-T FILE] [--max-unmapped-bases INT] [--min-indel-size INT] [--min-non-overlap INT] [--input-threads INT] -i <input_file> -s <splitter_file> -d <discordant_file>\n";
+}
+
 Options::Options(int argc, char** argv) {
     po::options_description desc = _options_desciption();
     po::positional_options_description p = _positional_description();
 
     po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
-    po::notify(vm);
-
-    if (!(vm.count("splitter") && vm.count("discordant"))) {
-        std::cerr << desc << std::endl;
-        exit(0);
-    }
 
     if (vm.count("help")) {
-        std::cerr << desc << std::endl;
+        std::cerr << usage() << desc << std::endl;
         exit(0);
     }
 
     if (vm.count("version")) {
         std::cerr << "version: " << __g_prog_version
             << " (commit " << __g_commit_hash << ")\n";
+        exit(0);
+    }
+    try {
+        po::notify(vm);
+    }
+    catch(po::required_option& ex) {
+        std::cerr << "ERROR: " << ex.what() << "\n\n";
+        std::cerr << usage() << desc << std::endl;
         exit(0);
     }
 }
@@ -37,9 +44,9 @@ po::options_description Options::_options_desciption() {
     desc.add_options()
         ("help,h", "produce this message")
         ("version,v", "output the version")
-        ("input,i", po::value<>(&input_file)->default_value("-"), "input BAM/CRAM/SAM")
-        ("splitter,s", po::value<>(&splitter_output_file), "output split reads to this file")
-        ("discordant,d", po::value<>(&discordant_output_file), "output discordant reads to this file")
+        ("input,i", po::value<>(&input_file)->default_value("-"), "input BAM/CRAM/SAM. Use '-' for stdin if using positional arguments")
+        ("splitter,s", po::value<>(&splitter_output_file)->required(), "output split reads to this file in BAM format (Required)")
+        ("discordant,d", po::value<>(&discordant_output_file)->required(), "output discordant reads to this file in BAM format (Required)")
         ("reference,T", po::value<>(&reference), "reference sequence used to encode CRAM file, recommended if reading CRAM")
         ("exclude-dups,e", po::bool_switch(&exclude_dups)->default_value(false), "exclude duplicate reads from output")
         ("max-unmapped-bases", po::value<>(&max_unmapped_bases)->default_value(50), "maximum number of unaligned bases between two alignments to be included in the splitter file")
