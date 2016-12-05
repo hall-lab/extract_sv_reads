@@ -32,7 +32,7 @@ namespace {
         bam1_t *aln = bam_init1();
         int discordant_flag = BAM_FPROPER_PAIR | BAM_FMUNMAP | BAM_FSUPPLEMENTARY;
 
-        while(reader.next(aln)) {
+        while (reader.next(aln)) {
             if (((aln->core.flag) & discordant_flag) == 0)
                 disc.write(aln);
 
