@@ -1,4 +1,4 @@
-#include "process_splitters/Alignment.hpp"
+#include "extract_sv_reads/Alignment.hpp"
 #include "TestData.hpp"
 #include "testing/TestBamRecords.hpp"
 

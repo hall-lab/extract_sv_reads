@@ -1,4 +1,4 @@
-#include "process_splitters/AlignmentOffsets.hpp"
+#include "extract_sv_reads/AlignmentOffsets.hpp"
 
 #include <sam.h>
 

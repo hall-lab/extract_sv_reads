@@ -1,13 +1,13 @@
-project(process_splitters)
+project(extract_sv_reads)
 
 set(SOURCES
-    process_splitters.cpp
+    extract_sv_reads.cpp
 )
 
-set(EXECUTABLE_NAME process-splitters)
+set(EXECUTABLE_NAME extract-sv-reads)
 xadd_executable(${EXECUTABLE_NAME} ${SOURCES})
 target_link_libraries(${EXECUTABLE_NAME}
-    process_splitters
+    extract_sv_reads
     ${HTSlib_LIBRARIES}
     ${Boost_LIBRARIES})
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES PACKAGE_OUTPUT_NAME ${EXECUTABLE_NAME}${EXE_VERSION_SUFFIX})

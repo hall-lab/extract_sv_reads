@@ -7,7 +7,7 @@ from testdata import TEST_DATA_DIRECTORY
 import unittest
 import subprocess
 
-class TestProcessSplitters(IntegrationTest, unittest.TestCase):
+class TestExtractSvReads(IntegrationTest, unittest.TestCase):
     def setUp(self):
         IntegrationTest.setUp(self)
         self.data_dir = TEST_DATA_DIRECTORY

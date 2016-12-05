@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(process_splitters)
+project(extract_sv_reads)
 
 if(NOT CMAKE_INSTALL_PREFIX)
     set(CMAKE_INSTALL_PREFIX "/usr")

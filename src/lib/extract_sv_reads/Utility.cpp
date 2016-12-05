@@ -1,5 +1,3 @@
-#pragma once
-
 #include <sam.h>
 
 #include <boost/format.hpp>

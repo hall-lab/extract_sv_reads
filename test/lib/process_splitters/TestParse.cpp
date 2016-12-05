@@ -1,4 +1,4 @@
-#include "process_splitters/Parse.hpp"
+#include "extract_sv_reads/Parse.hpp"
 
 #include <gtest/gtest.h>
 

@@ -1,8 +1,8 @@
-#include "process_splitters/Parse.hpp"
-#include "process_splitters/Alignment.hpp"
-#include "process_splitters/Options.hpp"
-#include "process_splitters/SamReader.hpp"
-#include "process_splitters/SamWriter.hpp"
+#include "extract_sv_reads/Parse.hpp"
+#include "extract_sv_reads/Alignment.hpp"
+#include "extract_sv_reads/Options.hpp"
+#include "extract_sv_reads/SamReader.hpp"
+#include "extract_sv_reads/SamWriter.hpp"
 
 #include <hts.h>
 #include <sam.h>

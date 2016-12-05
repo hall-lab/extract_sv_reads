@@ -1,4 +1,4 @@
-project(process_splitters)
+project(extract_sv_reads)
 
 set(SOURCES
     Alignment.hpp
@@ -12,5 +12,5 @@ set(SOURCES
     SamReader.hpp
 )
 
-xadd_library(process_splitters ${SOURCES})
-target_link_libraries(process_splitters ${Boost_LIBRARIES})
+xadd_library(extract_sv_reads ${SOURCES})
+target_link_libraries(extract_sv_reads ${Boost_LIBRARIES})

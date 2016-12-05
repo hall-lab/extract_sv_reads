@@ -1,4 +1,4 @@
-#include "process_splitters/SamReader.hpp"
+#include "extract_sv_reads/SamReader.hpp"
 #include "TestData.hpp"
 
 #include <sam.h>
