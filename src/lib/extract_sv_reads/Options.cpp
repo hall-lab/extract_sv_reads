@@ -10,7 +10,7 @@
 namespace po = boost::program_options;
 
 std::string Options::usage() {
-    return "Usage: extract-sv-reads [-evh] [-T FILE] [--max-unmapped-bases INT] [--min-indel-size INT] [--min-non-overlap INT] [--input-threads INT] -i <input_file> -s <splitter_file> -d <discordant_file>\n";
+    return "Usage: extract-sv-reads [OPTIONS...] <input_file> <splitter_file> <discordant_file>\n";
 }
 
 Options::Options(int argc, char** argv) {
@@ -49,6 +49,7 @@ po::options_description Options::_options_desciption() {
         ("discordant,d", po::value<>(&discordant_output_file)->required(), "output discordant reads to this file in BAM format (Required)")
         ("reference,T", po::value<>(&reference), "reference sequence used to encode CRAM file, recommended if reading CRAM")
         ("exclude-dups,e", po::bool_switch(&exclude_dups)->default_value(false), "exclude duplicate reads from output")
+        ("reduce-output-bams,r", po::bool_switch(&shrink_bam)->default_value(false), "remove sequences and qualities from output bams")
         ("max-unmapped-bases", po::value<>(&max_unmapped_bases)->default_value(50), "maximum number of unaligned bases between two alignments to be included in the splitter file")
         ("min-indel-size", po::value<>(&min_indel_size)->default_value(50), "minimum structural variant feature size for split alignments to be included in the splitter file")
         ("min-non-overlap", po::value<>(&min_non_overlap)->default_value(20), "minimum number of non-overlapping base pairs between two alignments for a read to be included in the splitter file")

@@ -37,7 +37,7 @@ class SamWriter {
             }
         }
 
-        void write(bam1_t const* record) const{
+        void write(bam1_t const* record) const {
             if (sam_write1(_out, _hdr, record) < 0) {
                 throw std::runtime_error(str(format(
                                 "Failed while writing to file %1%"

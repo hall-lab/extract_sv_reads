@@ -10,6 +10,8 @@ set(SOURCES
     Options.hpp
     Options.cpp
     SamReader.hpp
+    SamWriter.hpp
+    ShrunkSamWriter.hpp
     BamTransform.hpp
 )
 

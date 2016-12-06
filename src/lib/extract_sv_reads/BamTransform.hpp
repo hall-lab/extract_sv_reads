@@ -9,6 +9,7 @@
 class BamTransformer {
     private:
         bam1_t* _aln;
+
         std::size_t _pre_seq_bytes(bam1_t const* b) const {
             return (b->core.n_cigar<<2) + b->core.l_qname;
         }
@@ -32,7 +33,7 @@ class BamTransformer {
             bam_destroy1(_aln);
         }
 
-        bam1_t* operator()(bam1_t const* b) {
+        bam1_t* operator()(bam1_t const* b) const {
             // Largely based off of htslib's bam_copy1 function
             uint8_t* data = _aln->data;
             int m_data = _aln->m_data;

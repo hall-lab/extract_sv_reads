@@ -23,6 +23,7 @@ class Options {
         std::string reference;
 
         bool exclude_dups;
+        bool shrink_bam;
         int min_non_overlap;
         int max_unmapped_bases;
         int min_indel_size;
