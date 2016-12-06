@@ -51,6 +51,22 @@ class TestExtractSvReads(IntegrationTest, unittest.TestCase):
         self.assertFilesEqual(expected_splitter_file, output_splitter_file)
         self.assertFilesEqual(expected_discordant_file, output_discordant_file)
 
+    def test_program_nodups_shrunk(self):
+        expected_splitter_file = "expected_nodups.splitters.sorted.shrunk.bam"
+        expected_discordant_file = "expected_nodups.discordants.sorted.shrunk.bam"
+        output_splitter_file = self.tempFile("splitters.bam")
+        output_discordant_file = self.tempFile("discordants.bam")
+        input_bam = "integration_test.bam"
+        cmdline = " ".join([self.exe_path, '-r', '-e', '-i', input_bam, '-s', output_splitter_file, '-d', output_discordant_file])
+        print "Executing: ", cmdline
+        print "CWD: ", os.getcwd()
+
+        rv = subprocess.call(cmdline, shell=True)
+        print "Return value: ", rv
+        self.assertEqual(0, rv)
+        self.assertFilesEqual(expected_splitter_file, output_splitter_file)
+        self.assertFilesEqual(expected_discordant_file, output_discordant_file)
+
 
 if __name__ == "__main__":
     main()
