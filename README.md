@@ -8,6 +8,9 @@ The purpose of this program is to extract splitter and discordant reads from a C
 # Usage Notes
 Splitters and discordants are output in BAM files. Duplicates are included by default, but can be excluded using the `-e` option. CRAM is supported as an input format, however, I highly recommend that when running on a CRAM file the `-T` option and `--input-threads` option are utilized. Neither of these are useful for BAM files, but allocating additional threads for CRAM reading will speed up the program significantly. In addition, `-T` prevents htslib from downloading the reference sequence used to encode the CRAM to the `REF_CACHE` location. By default, this is in the current user's home directory and may prove problematic for those with smallish home directories. See the [htslib documentation](http://www.htslib.org/workflow/) for more information.
 
+# Credits
+This program is heavily based on code from [SAMBLASTER](https://github.com/GregoryFaust/samblaster), unpublished code from [Ryan Layer](https://github.com/ryanlayer) and code written by [Travis Abbott](https://github.com/tabbott) in [diagnose_dups](https://github.com/genome/diagnose_dups).
+
 # Compilation and Installation
 Currently, `extract_sv_reads` must be compiled from source code. It is routinely tested using both the `gcc` and `clang` compilers on Ubuntu 12.04. It should work on other Unix-based operating systems, but they are not supported.
 
