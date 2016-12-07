@@ -1,7 +1,3 @@
-[This software contains code derived from htslib, diagnose_dups and SAMBLASTER
-which are all licensed under the MIT license. Please examine NOTICE.md for more
-information.]
-
 MIT License
 
 Copyright (c) 2016 Ira Hall lab and The McDonnell Genome Institute
