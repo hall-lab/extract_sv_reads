@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/hall-lab/extract_sv_reads.svg?branch=master)](https://travis-ci.org/hall-lab/extract_sv_reads)
 [![Coverage Status](https://coveralls.io/repos/github/hall-lab/extract_sv_reads/badge.svg?branch=master)](https://coveralls.io/github/hall-lab/extract_sv_reads?branch=master)
 [![Version](https://img.shields.io/github/release/hall-lab/extract_sv_reads.svg)](https://github.com/hall-lab/extract_sv_reads/releases)
+[![License](https://img.shields.io/github/license/hall-lab/extract_sv_reads.svg)](LICENSE.txt)
 
 # Description
 The purpose of this program is to extract splitter and discordant reads from a CRAM or BAM file using logic identical to [SAMBLASTER](https://github.com/GregoryFaust/samblaster). This allows the generation of splitter and discordant files without name-sorting the input file. Unlike SAMBLASTER which appends '_1' and '_2' to splitter read names, read names in the splitter output file are altered by changing the first character to an 'A' for read1 and a 'B' for read2.
