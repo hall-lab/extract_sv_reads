@@ -34,7 +34,11 @@ Boost 1.59, htslib 1.3.2, and zlib 1.2.8 are included with the source code and w
 sudo apt-get install build-essential git-core cmake
 ```
 
-### Clone the repository
+### Download a stable version or clone the repository
+
+Download and extract the code of the [latest release](https://github.com/hall-lab/extract_sv_reads/releases/latest)
+
+or clone from the master branch using git
 
 ```
 git clone git://github.com/hall-lab/extract_sv_reads.git
