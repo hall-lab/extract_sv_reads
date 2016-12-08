@@ -10,7 +10,24 @@
 namespace po = boost::program_options;
 
 std::string Options::usage() {
-    return "Usage: extract-sv-reads [OPTIONS...] <input_file> <splitter_file> <discordant_file>\n";
+    //TODO Using manual line breaks below. This seems suboptimal...
+    return "Usage: extract-sv-reads [OPTIONS...] <input_file> <splitter_file> <discordant_file>\n"
+        "\n"
+        "Examples:\n"
+        "\textract-sv-reads input.bam splitters.bam discordants.bam\n"
+        "\textract-sv-reads -i input.bam -s splitters.bam -d discordants.bam\n"
+        "\textract-sv-reads -e -r --input-threads 4 -T /path/to/reference.fa \\\n"
+        "\t  -i input.cram -s splitters.bam -d discordants.bam\n"
+        "\n"
+        "Notes:\n"
+        "\t--input-threads and -T are only useful when the input file is a CRAM.\n\n"
+        "\tBoth options are highly recommended when parsing a CRAM. When parsing CRAM,\n"
+        "\t extract-sv-reads will download the entire reference used to encode the CRAM\n"
+        "\tfrom EBI unless the -T option is specified to the proper local reference.\n"
+        "\tThis is both slow and may fill up your home directory. See the REF_PATH and\n"
+        "\tREF_CACHE documentation of htslib and samtools for more information.\n"
+        "\n"
+        ;
 }
 
 Options::Options(int argc, char** argv) {
