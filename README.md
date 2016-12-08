@@ -2,6 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/hall-lab/extract_sv_reads/badge.svg?branch=master)](https://coveralls.io/github/hall-lab/extract_sv_reads?branch=master)
 [![Version](https://img.shields.io/github/release/hall-lab/extract_sv_reads.svg)](https://github.com/hall-lab/extract_sv_reads/releases)
 [![License](https://img.shields.io/github/license/hall-lab/extract_sv_reads.svg)](LICENSE.txt)
+[![DOI](https://zenodo.org/badge/75641367.svg)](https://zenodo.org/badge/latestdoi/75641367)
 
 # Description
 The purpose of this program is to extract splitter and discordant reads from a CRAM or BAM file using logic identical to [SAMBLASTER](https://github.com/GregoryFaust/samblaster). This allows the generation of splitter and discordant files without name-sorting the input file. Unlike SAMBLASTER which appends '_1' and '_2' to splitter read names, read names in the splitter output file are altered by changing the first character to an 'A' for read1 and a 'B' for read2.
@@ -41,7 +42,7 @@ git clone git://github.com/hall-lab/extract_sv_reads.git
 
 ### Build the program
 
-`extract_sv_reads` does not support in-source builds. So create a subdirectory, enter it, build, and run tests:
+`extract-sv-reads` does not support in-source builds. So create a subdirectory, enter it, build, and run tests:
 
 ```
 mkdir extract_sv_reads/build
@@ -61,6 +62,9 @@ cmake -DHTSLIB_USE_LIBCURL=1 ..
 make -j
 make test
 ```
+
+# Citing
+Please cite `extract-sv-reads` using its [DOI](https://zenodo.org/badge/latestdoi/75641367). Note that this link corresponds to the latest version. If you used an earlier version then your DOI may be different and you can find it on [Zenodo](https://zenodo.org).
 
 # Getting Help
 Please open issues on the github [repository](https://github.com/hall-lab/extract_sv_reads/issues) to obtain help.
