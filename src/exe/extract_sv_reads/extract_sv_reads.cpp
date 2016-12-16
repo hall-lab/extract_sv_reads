@@ -80,7 +80,7 @@ namespace {
 
         SamReader reader(opts.input_file.c_str(), opts.reference.c_str(), opts.input_threads);
 
-        int skip_flag = BAM_FUNMAP | BAM_FQCFAIL | BAM_FSECONDARY;
+        int skip_flag = BAM_FUNMAP | BAM_FQCFAIL;
         if (opts.exclude_dups) {
             skip_flag = skip_flag | BAM_FDUP;
         }
