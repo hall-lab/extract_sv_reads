@@ -1,5 +1,5 @@
 #!/bin/sh
-# prerm script for joinx
+# prerm script for extract-sv-reads
 #
 # see: dh_installdeb(1)
 
@@ -15,8 +15,8 @@
 # the debian-policy package
 
 
-EXECUTABLES="joinx"
-MANPAGES="joinx"
+EXECUTABLES="extract-sv-reads"
+MANPAGES="extract-sv-reads"
 
 set -e
 
