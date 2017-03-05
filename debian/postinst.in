@@ -17,7 +17,6 @@
 
 
 EXECUTABLES="extract-sv-reads"
-MANPAGES="extract-sv-reads"
 PRIORITY=@DEFAULT_ETC_ALTERNATIVES_PRIORITY@
 
 set -e
@@ -31,12 +30,6 @@ case "$1" in
             update-alternatives --install $BARE_EXE $e $VERSIONED_EXE $PRIORITY
         done
 
-        for m in $MANPAGES
-        do
-            BARE_MAN=/usr/share/man/man1/$m.1.gz
-            VERSIONED_MAN=/usr/share/man/man1/${m}@EXE_VERSION_SUFFIX@.1.gz
-            update-alternatives --install $BARE_MAN $m.1.gz $VERSIONED_MAN $PRIORITY
-        done
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
