@@ -15,7 +15,7 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Tool for extracting splitter or
 set(CPACK_PACKAGE_NAME "extract-sv-reads${EXE_VERSION_SUFFIX}")
 set(CPACK_PACKAGE_VENDOR "wugc")
 set(CPACK_PACKAGE_VERSION ${FULL_VERSION})
-set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Dave Larson delarson@wustl.edu>")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Dave Larson <delarson@wustl.edu>")
 set(CPACK_SYSTEM_NAME "Linux-${ARCH}")
 set(CPACK_TOPLEVEL_TAG "Linux-${ARCH}")
 set(CPACK_DEBIAN_PACKAGE_PROVIDES "extract-sv-reads")
