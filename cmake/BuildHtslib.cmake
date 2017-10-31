@@ -29,13 +29,13 @@ if (HTSLIB_USE_LIBCURL)
 endif (HTSLIB_USE_LIBCURL)
 
 ExternalDependency_Add(
-    htslib-1.3.2
+    htslib-1.6
     BUILD_BYPRODUCTS ${HTSLIB_LIB}
     ARGS
-        URL ${CMAKE_SOURCE_DIR}/vendor/htslib-1.3.2.tgz
+        URL ${CMAKE_SOURCE_DIR}/vendor/htslib-1.6.tgz
         SOURCE_DIR ${HTSLIB_ROOT}
         BINARY_DIR ${HTSLIB_ROOT}
-        CONFIGURE_COMMAND ./configure --prefix=${HTSLIB_ROOT} ${HTSLIB_CONFIGURE_OPTIONS} && echo "Building htslib, build log at ${HTSLIB_LOG}"
+        CONFIGURE_COMMAND ./configure --prefix=${HTSLIB_ROOT} ${HTSLIB_CONFIGURE_OPTIONS} --enable-libcurl=check --disable-bz2 --disable-lzma && echo "Building htslib, build log at ${HTSLIB_LOG}"
         BUILD_COMMAND make INCLUDES=-I${ZLIB_INCLUDE_DIRS} > ${HTSLIB_LOG} 2>&1
         INSTALL_COMMAND "true"
 )
@@ -44,5 +44,5 @@ set(HTSlib_INCLUDE_DIRS ${ZLIB_INCLUDE_DIRS};${HTSLIB_ROOT}/htslib)
 set(HTSlib_LIBRARIES ${HTSLIB_LIB} m ${HTSLIB_XLIBRARIES} ${ZLIB_LIBRARIES})
 
 if (NOT ZLIB_FOUND)
-    add_dependencies(htslib-1.3.2 zlib)
+    add_dependencies(htslib-1.6 zlib)
 endif (NOT ZLIB_FOUND)
