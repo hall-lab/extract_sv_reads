@@ -40,6 +40,15 @@ class SamReader {
                 }
             }
 
+            if (_in->format.format == cram) {
+                // CRAM is flexible in terms of what it can decode.
+                // Only ask for what we need
+                if (hts_set_opt(_in, CRAM_OPT_REQUIRED_FIELDS, 
+                            SAM_FLAG | SAM_QNAME | SAM_RNAME | SAM_POS | SAM_CIGAR | SAM_TLEN | SAM_AUX | SAM_SEQ | SAM_QUAL) != 0) {
+                    throw std::runtime_error(str(format("Unable to set CRAM reading options on %1%") % reference));
+                }
+            }
+
             if (!(_hdr = sam_hdr_read(_in))) {
                 throw std::runtime_error(str(format(
                                 "Failed to read header from file %1%"
