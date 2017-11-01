@@ -2,6 +2,7 @@
 
 #include <sam.h>
 #include <hts.h>
+#include <thread_pool.h>
 
 #include <boost/format.hpp>
 
@@ -13,6 +14,7 @@ class SamReader {
     public:
         SamReader(char const* path, char const* reference=NULL, int nthreads=1)
             : _in(hts_open(path, "r"))
+            , _thread_pool()
             , _required_flags(0)
             , _skip_flags(0)
         {
@@ -32,10 +34,14 @@ class SamReader {
 
             if (nthreads > 1) {
                 if (_in->format.format != cram) {
+                    // TODO Check and see if this is still true after moving to bcftools1.6 and thread pools
                     std::cerr << "Additional threads can only be used to read CRAM files. Proceeding with one thread...\n";
                 }
                 else {
-                    if (hts_set_threads(_in, nthreads) != 0) {
+                    if (!(_thread_pool.pool = hts_tpool_init(nthreads))) {
+                        throw std::runtime_error("Failed to initialize thread pool");
+                    }
+                    if (hts_set_opt(_in, HTS_OPT_THREAD_POOL, &_thread_pool) != 0) {
                         throw std::runtime_error(str(format(
                                         "Failed to use threads to read CRAM %1%"
                                         ) % path));
@@ -57,6 +63,10 @@ class SamReader {
 
             if (_in) {
                 hts_close(_in);
+            }
+
+            if (_thread_pool.pool) {
+                hts_tpool_destroy(_thread_pool.pool);
             }
         }
 
@@ -88,6 +98,7 @@ class SamReader {
 
     private:
         htsFile* _in;
+        htsThreadPool _thread_pool;
         bam_hdr_t* _hdr;
         uint32_t _required_flags;
         uint32_t _skip_flags;
