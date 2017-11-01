@@ -79,8 +79,14 @@ namespace {
     void run(Options const& opts) {
         
         ThreadPool* pool = NULL;
+        // NOTE Always creating the thread pool, even if it isn't needed
+        // I don't think this has a high cost as there is only one.
+        // An alternative would be to dynamically create it and then 
+        // catch any exceptions during running and delete
+
+        ThreadPool app_thread_pool(opts.input_threads);
         if (opts.input_threads > 1) {
-            pool = new ThreadPool(opts.input_threads);
+            pool = &app_thread_pool;
         }
 
         SamReader reader(opts.input_file.c_str(), opts.reference.c_str(), pool);
