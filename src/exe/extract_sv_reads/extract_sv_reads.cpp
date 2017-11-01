@@ -77,8 +77,13 @@ namespace {
             bam_destroy1(aln);
         }
     void run(Options const& opts) {
+        
+        ThreadPool* pool = NULL;
+        if (opts.input_threads > 1) {
+            pool = new ThreadPool(opts.input_threads);
+        }
 
-        SamReader reader(opts.input_file.c_str(), opts.reference.c_str(), opts.input_threads);
+        SamReader reader(opts.input_file.c_str(), opts.reference.c_str(), pool);
 
         int skip_flag = BAM_FUNMAP | BAM_FQCFAIL;
         if (opts.exclude_dups) {

@@ -1,8 +1,9 @@
 #pragma once
 
+#include "extract_sv_reads/ThreadPool.hpp"
+
 #include <sam.h>
 #include <hts.h>
-#include <thread_pool.h>
 
 #include <boost/format.hpp>
 
@@ -12,9 +13,8 @@
 
 class SamReader {
     public:
-        SamReader(char const* path, char const* reference=NULL, int nthreads=1)
+        SamReader(char const* path, char const* reference=NULL, ThreadPool *thread_pool=NULL)
             : _in(hts_open(path, "r"))
-            , _thread_pool()
             , _required_flags(0)
             , _skip_flags(0)
         {
@@ -32,13 +32,10 @@ class SamReader {
                 }
             }
 
-            if (nthreads > 1) {
-                if (!(_thread_pool.pool = hts_tpool_init(nthreads))) {
-                    throw std::runtime_error("Failed to initialize thread pool");
-                }
-                if (hts_set_opt(_in, HTS_OPT_THREAD_POOL, &_thread_pool) != 0) {
+            if (thread_pool) {
+                if (hts_set_opt(_in, HTS_OPT_THREAD_POOL, thread_pool->pool()) != 0) {
                     throw std::runtime_error(str(format(
-                                    "Failed to use threads to read CRAM %1%"
+                                    "Failed to use threads to read %1%"
                                     ) % path));
                 }
             }
@@ -57,10 +54,6 @@ class SamReader {
 
             if (_in) {
                 hts_close(_in);
-            }
-
-            if (_thread_pool.pool) {
-                hts_tpool_destroy(_thread_pool.pool);
             }
         }
 
@@ -92,7 +85,6 @@ class SamReader {
 
     private:
         htsFile* _in;
-        htsThreadPool _thread_pool;
         bam_hdr_t* _hdr;
         uint32_t _required_flags;
         uint32_t _skip_flags;
