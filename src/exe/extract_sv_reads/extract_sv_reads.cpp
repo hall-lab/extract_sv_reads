@@ -89,7 +89,7 @@ namespace {
             pool = &app_thread_pool;
         }
 
-        SamReader reader(opts.input_file.c_str(), opts.reference.c_str(), pool);
+        SamReader reader(opts.input_file.c_str(), opts.reference.c_str(), pool, opts.shrink_bam);
 
         int skip_flag = BAM_FUNMAP | BAM_FQCFAIL;
         if (opts.exclude_dups) {

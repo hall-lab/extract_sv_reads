@@ -13,7 +13,7 @@
 
 class SamReader {
     public:
-        SamReader(char const* path, char const* reference=NULL, ThreadPool* thread_pool=NULL)
+        SamReader(char const* path, char const* reference=NULL, ThreadPool* thread_pool=NULL, bool reduced=false)
             : _in(hts_open(path, "r"))
             , _required_flags(0)
             , _skip_flags(0)
@@ -43,8 +43,12 @@ class SamReader {
             if (_in->format.format == cram) {
                 // CRAM is flexible in terms of what it can decode.
                 // Only ask for what we need
-                if (hts_set_opt(_in, CRAM_OPT_REQUIRED_FIELDS, 
-                            SAM_FLAG | SAM_QNAME | SAM_RNAME | SAM_POS | SAM_CIGAR | SAM_TLEN | SAM_AUX | SAM_SEQ | SAM_QUAL) != 0) {
+                uint32_t rf = SAM_FLAG | SAM_QNAME | SAM_RNAME | SAM_POS | SAM_CIGAR | SAM_TLEN | SAM_AUX; 
+                if (!reduced) {
+                    rf = rf | SAM_SEQ | SAM_QUAL;
+                }
+
+                if (hts_set_opt(_in, CRAM_OPT_REQUIRED_FIELDS, rf)!= 0) {
                     throw std::runtime_error(str(format(
                                     "Unable to set CRAM reading options on %1%"
                                     ) % path));
