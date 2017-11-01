@@ -98,13 +98,13 @@ namespace {
         reader.skip_flags(skip_flag);
 
         if (opts.shrink_bam) {
-            ShrunkSamWriter disc(opts.discordant_output_file.c_str(), "wb", reader.header());
-            ShrunkSamWriter split(opts.splitter_output_file.c_str(), "wb", reader.header());
+            ShrunkSamWriter disc(opts.discordant_output_file.c_str(), "wb", reader.header(), pool);
+            ShrunkSamWriter split(opts.splitter_output_file.c_str(), "wb", reader.header(), pool);
             parse_file(opts, reader, disc, split);
         }
         else {
-            SamWriter disc(opts.discordant_output_file.c_str(), "wb", reader.header());
-            SamWriter split(opts.splitter_output_file.c_str(), "wb", reader.header());
+            SamWriter disc(opts.discordant_output_file.c_str(), "wb", reader.header(), pool);
+            SamWriter split(opts.splitter_output_file.c_str(), "wb", reader.header(), pool);
             parse_file(opts, reader, disc, split);
         }
     }

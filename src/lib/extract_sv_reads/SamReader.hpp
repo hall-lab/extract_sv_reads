@@ -1,6 +1,6 @@
 #pragma once
 
-#include "extract_sv_reads/ThreadPool.hpp"
+#include "ThreadPool.hpp"
 
 #include <htslib/sam.h>
 #include <htslib/hts.h>
@@ -13,7 +13,7 @@
 
 class SamReader {
     public:
-        SamReader(char const* path, char const* reference=NULL, ThreadPool *thread_pool=NULL)
+        SamReader(char const* path, char const* reference=NULL, ThreadPool* thread_pool=NULL)
             : _in(hts_open(path, "r"))
             , _required_flags(0)
             , _skip_flags(0)
