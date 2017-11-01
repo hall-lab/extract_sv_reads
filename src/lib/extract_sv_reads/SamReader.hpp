@@ -33,19 +33,13 @@ class SamReader {
             }
 
             if (nthreads > 1) {
-                if (_in->format.format != cram) {
-                    // TODO Check and see if this is still true after moving to bcftools1.6 and thread pools
-                    std::cerr << "Additional threads can only be used to read CRAM files. Proceeding with one thread...\n";
+                if (!(_thread_pool.pool = hts_tpool_init(nthreads))) {
+                    throw std::runtime_error("Failed to initialize thread pool");
                 }
-                else {
-                    if (!(_thread_pool.pool = hts_tpool_init(nthreads))) {
-                        throw std::runtime_error("Failed to initialize thread pool");
-                    }
-                    if (hts_set_opt(_in, HTS_OPT_THREAD_POOL, &_thread_pool) != 0) {
-                        throw std::runtime_error(str(format(
-                                        "Failed to use threads to read CRAM %1%"
-                                        ) % path));
-                    }
+                if (hts_set_opt(_in, HTS_OPT_THREAD_POOL, &_thread_pool) != 0) {
+                    throw std::runtime_error(str(format(
+                                    "Failed to use threads to read CRAM %1%"
+                                    ) % path));
                 }
             }
 
