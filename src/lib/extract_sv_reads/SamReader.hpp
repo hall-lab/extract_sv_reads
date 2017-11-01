@@ -45,7 +45,15 @@ class SamReader {
                 // Only ask for what we need
                 if (hts_set_opt(_in, CRAM_OPT_REQUIRED_FIELDS, 
                             SAM_FLAG | SAM_QNAME | SAM_RNAME | SAM_POS | SAM_CIGAR | SAM_TLEN | SAM_AUX | SAM_SEQ | SAM_QUAL) != 0) {
-                    throw std::runtime_error(str(format("Unable to set CRAM reading options on %1%") % reference));
+                    throw std::runtime_error(str(format(
+                                    "Unable to set CRAM reading options on %1%"
+                                    ) % path));
+                }
+
+                if (hts_set_opt(_in, CRAM_OPT_DECODE_MD, 0) != 0) {
+                    throw std::runtime_error(str(format(
+                                    "Unable to set MD tag decoding off on %1%"
+                                    ) % path));
                 }
             }
 
