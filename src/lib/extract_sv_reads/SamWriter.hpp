@@ -1,6 +1,6 @@
 #pragma once
 
-#include <sam.h>
+#include <htslib/sam.h>
 
 #include <boost/format.hpp>
 

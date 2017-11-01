@@ -5,8 +5,8 @@
 #include "extract_sv_reads/SamWriter.hpp"
 #include "extract_sv_reads/ShrunkSamWriter.hpp"
 
-#include <hts.h>
-#include <sam.h>
+#include <htslib/hts.h>
+#include <htslib/sam.h>
 
 #include <boost/format.hpp>
 

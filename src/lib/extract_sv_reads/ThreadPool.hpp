@@ -1,8 +1,7 @@
 #pragma once
 
-// TODO Check if hts.h is needed
-#include <hts.h>
-#include <thread_pool.h>
+#include <htslib/hts.h>
+#include <htslib/thread_pool.h>
 
 #include <stdexcept>
 

@@ -3,7 +3,7 @@
 #include "SamWriter.hpp"
 #include "BamTransform.hpp"
 
-#include <sam.h>
+#include <htslib/sam.h>
 
 class ShrunkSamWriter : public SamWriter {
     private:

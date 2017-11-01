@@ -3,7 +3,7 @@
 #include "Utility.hpp"
 #include "Parse.hpp"
 
-#include <sam.h>
+#include <htslib/sam.h>
 
 #include <boost/format.hpp>
 

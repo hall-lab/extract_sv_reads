@@ -1,7 +1,7 @@
 #include "extract_sv_reads/SamReader.hpp"
 #include "TestData.hpp"
 
-#include <sam.h>
+#include <htslib/sam.h>
 
 #include <gtest/gtest.h>
 #include <stdexcept>
