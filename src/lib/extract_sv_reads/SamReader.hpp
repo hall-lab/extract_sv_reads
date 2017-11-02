@@ -48,7 +48,7 @@ class SamReader {
                     rf = rf | SAM_SEQ | SAM_QUAL;
                 }
 
-                if (hts_set_opt(_in, CRAM_OPT_REQUIRED_FIELDS, rf)!= 0) {
+                if (hts_set_opt(_in, CRAM_OPT_REQUIRED_FIELDS, rf) != 0) {
                     throw std::runtime_error(str(format(
                                     "Unable to set CRAM reading options on %1%"
                                     ) % path));

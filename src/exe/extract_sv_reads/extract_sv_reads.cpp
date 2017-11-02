@@ -83,9 +83,10 @@ namespace {
         // I don't think this has a high cost as there is only one.
         // An alternative would be to dynamically create it and then 
         // catch any exceptions during running and delete
+        int threads = opts.threads > opts.input_threads ? opts.threads : opts.input_threads;
 
-        ThreadPool app_thread_pool(opts.input_threads);
-        if (opts.input_threads > 1) {
+        ThreadPool app_thread_pool(threads);
+        if (threads > 1) {
             pool = &app_thread_pool;
         }
 
