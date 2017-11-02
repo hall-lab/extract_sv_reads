@@ -1,7 +1,9 @@
+[![License](https://img.shields.io/github/license/hall-lab/extract_sv_reads.svg)](LICENSE.txt)
 [![Build Status](https://travis-ci.org/hall-lab/extract_sv_reads.svg?branch=master)](https://travis-ci.org/hall-lab/extract_sv_reads)
 [![Coverage Status](https://coveralls.io/repos/github/hall-lab/extract_sv_reads/badge.svg?branch=master)](https://coveralls.io/github/hall-lab/extract_sv_reads?branch=master)
+
 [![Version](https://img.shields.io/github/release/hall-lab/extract_sv_reads.svg)](https://github.com/hall-lab/extract_sv_reads/releases)
-[![License](https://img.shields.io/github/license/hall-lab/extract_sv_reads.svg)](LICENSE.txt)
+[![bioconda-badge](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io)
 [![DOI](https://zenodo.org/badge/75641367.svg)](https://zenodo.org/badge/latestdoi/75641367)
 
 # Description
