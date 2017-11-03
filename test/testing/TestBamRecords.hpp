@@ -2,7 +2,7 @@
 
 #include "TestData.hpp"
 
-#include <sam.h>
+#include <htslib/sam.h>
 #include <gtest/gtest.h>
 #include <stdexcept>
 #include <iostream>

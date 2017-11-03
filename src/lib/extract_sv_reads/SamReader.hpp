@@ -1,7 +1,9 @@
 #pragma once
 
-#include <sam.h>
-#include <hts.h>
+#include "ThreadPool.hpp"
+
+#include <htslib/sam.h>
+#include <htslib/hts.h>
 
 #include <boost/format.hpp>
 
@@ -11,7 +13,7 @@
 
 class SamReader {
     public:
-        SamReader(char const* path, char const* reference=NULL, int nthreads=1)
+        SamReader(char const* path, char const* reference=NULL, ThreadPool* thread_pool=NULL, bool reduced=false)
             : _in(hts_open(path, "r"))
             , _required_flags(0)
             , _skip_flags(0)
@@ -30,16 +32,32 @@ class SamReader {
                 }
             }
 
-            if (nthreads > 1) {
-                if (_in->format.format != cram) {
-                    std::cerr << "Additional threads can only be used to read CRAM files. Proceeding with one thread...\n";
+            if (thread_pool) {
+                if (hts_set_opt(_in, HTS_OPT_THREAD_POOL, thread_pool->pool()) != 0) {
+                    throw std::runtime_error(str(format(
+                                    "Failed to use threads to read %1%"
+                                    ) % path));
                 }
-                else {
-                    if (hts_set_threads(_in, nthreads) != 0) {
-                        throw std::runtime_error(str(format(
-                                        "Failed to use threads to read CRAM %1%"
-                                        ) % path));
-                    }
+            }
+
+            if (_in->format.format == cram) {
+                // CRAM is flexible in terms of what it can decode.
+                // Only ask for what we need
+                uint32_t rf = SAM_FLAG | SAM_QNAME | SAM_RNAME | SAM_POS | SAM_CIGAR | SAM_TLEN | SAM_AUX; 
+                if (!reduced) {
+                    rf = rf | SAM_SEQ | SAM_QUAL;
+                }
+
+                if (hts_set_opt(_in, CRAM_OPT_REQUIRED_FIELDS, rf) != 0) {
+                    throw std::runtime_error(str(format(
+                                    "Unable to set CRAM reading options on %1%"
+                                    ) % path));
+                }
+
+                if (hts_set_opt(_in, CRAM_OPT_DECODE_MD, 0) != 0) {
+                    throw std::runtime_error(str(format(
+                                    "Unable to set MD tag decoding off on %1%"
+                                    ) % path));
                 }
             }
 

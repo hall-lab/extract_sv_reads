@@ -5,8 +5,8 @@
 #include "extract_sv_reads/SamWriter.hpp"
 #include "extract_sv_reads/ShrunkSamWriter.hpp"
 
-#include <hts.h>
-#include <sam.h>
+#include <htslib/hts.h>
+#include <htslib/sam.h>
 
 #include <boost/format.hpp>
 
@@ -77,8 +77,20 @@ namespace {
             bam_destroy1(aln);
         }
     void run(Options const& opts) {
+        
+        ThreadPool* pool = NULL;
+        // NOTE Always creating the thread pool, even if it isn't needed
+        // I don't think this has a high cost as there is only one.
+        // An alternative would be to dynamically create it and then 
+        // catch any exceptions during running and delete
+        int threads = opts.threads > opts.input_threads ? opts.threads : opts.input_threads;
 
-        SamReader reader(opts.input_file.c_str(), opts.reference.c_str(), opts.input_threads);
+        ThreadPool app_thread_pool(threads);
+        if (threads > 1) {
+            pool = &app_thread_pool;
+        }
+
+        SamReader reader(opts.input_file.c_str(), opts.reference.c_str(), pool, opts.shrink_bam);
 
         int skip_flag = BAM_FUNMAP | BAM_FQCFAIL;
         if (opts.exclude_dups) {
@@ -87,13 +99,13 @@ namespace {
         reader.skip_flags(skip_flag);
 
         if (opts.shrink_bam) {
-            ShrunkSamWriter disc(opts.discordant_output_file.c_str(), "wb", reader.header());
-            ShrunkSamWriter split(opts.splitter_output_file.c_str(), "wb", reader.header());
+            ShrunkSamWriter disc(opts.discordant_output_file.c_str(), "wb", reader.header(), pool);
+            ShrunkSamWriter split(opts.splitter_output_file.c_str(), "wb", reader.header(), pool);
             parse_file(opts, reader, disc, split);
         }
         else {
-            SamWriter disc(opts.discordant_output_file.c_str(), "wb", reader.header());
-            SamWriter split(opts.splitter_output_file.c_str(), "wb", reader.header());
+            SamWriter disc(opts.discordant_output_file.c_str(), "wb", reader.header(), pool);
+            SamWriter split(opts.splitter_output_file.c_str(), "wb", reader.header(), pool);
             parse_file(opts, reader, disc, split);
         }
     }

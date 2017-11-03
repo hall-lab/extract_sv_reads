@@ -12,6 +12,7 @@ set(SOURCES
     SamReader.hpp
     SamWriter.hpp
     ShrunkSamWriter.hpp
+    ThreadPool.hpp
     BamTransform.hpp
 )
 

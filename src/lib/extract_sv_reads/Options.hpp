@@ -8,7 +8,8 @@ namespace po = boost::program_options;
 
 class Options {
     private:
-        po::options_description _options_desciption();
+        po::options_description _options_description();
+        po::options_description _deprecated_options_description();
         po::positional_options_description _positional_description();
         std::string usage();
 
@@ -28,5 +29,7 @@ class Options {
         int max_unmapped_bases;
         int min_indel_size;
 
+        int threads;
+        // NOTE Deprecated options
         int input_threads;
 };

@@ -1,6 +1,6 @@
 #include "extract_sv_reads/AlignmentOffsets.hpp"
 
-#include <sam.h>
+#include <htslib/sam.h>
 
 #include <gtest/gtest.h>
 #include <stdexcept>

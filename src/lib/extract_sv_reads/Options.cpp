@@ -16,25 +16,29 @@ std::string Options::usage() {
         "Examples:\n"
         "\textract-sv-reads input.bam splitters.bam discordants.bam\n"
         "\textract-sv-reads -i input.bam -s splitters.bam -d discordants.bam\n"
-        "\textract-sv-reads -e -r --input-threads 4 -T /path/to/reference.fa \\\n"
+        "\textract-sv-reads -e -r --threads 4 -T /path/to/reference.fa \\\n"
         "\t  -i input.cram -s splitters.bam -d discordants.bam\n"
         "\n"
         "Notes:\n"
-        "\t--input-threads and -T are only useful when the input file is a CRAM.\n\n"
-        "\tBoth options are highly recommended when parsing a CRAM. When parsing CRAM,\n"
-        "\t extract-sv-reads will download the entire reference used to encode the CRAM\n"
-        "\tfrom EBI unless the -T option is specified to the proper local reference.\n"
-        "\tThis is both slow and may fill up your home directory. See the REF_PATH and\n"
-        "\tREF_CACHE documentation of htslib and samtools for more information.\n"
+        "\t-T is only useful when the input file is a CRAM.\n\n"
+        "\tWhen parsing CRAM, extract-sv-reads will download the entire reference\n"
+        "\tused to encode the CRAM from EBI unless the -T option is specified to the\n"
+        "\tproper local reference. This is both slow and may fill up your home\n"
+        "\tdirectory. See the REF_PATH and REF_CACHE documentation of htslib and\n"
+        "\tsamtools for more information.\n"
         "\n"
         ;
 }
 
 Options::Options(int argc, char** argv) {
-    po::options_description desc = _options_desciption();
+    po::options_description desc = _options_description();
+    po::options_description hidden = _deprecated_options_description();
     po::positional_options_description p = _positional_description();
 
-    po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
+    po::options_description all;
+    all.add(desc).add(hidden);
+
+    po::store(po::command_line_parser(argc, argv).options(all).positional(p).run(), vm);
 
     if (vm.count("help")) {
         std::cerr << usage() << desc << std::endl;
@@ -46,6 +50,14 @@ Options::Options(int argc, char** argv) {
             << " (commit " << __g_commit_hash << ")\n";
         exit(0);
     }
+
+    if (!vm["input-threads"].defaulted()) {
+        std::cerr << "WARNING: The --input-threads option will be removed in a future release. Please modify your pipeline to use --threads instead\n";
+        if (!vm["threads"].defaulted()) {
+            std::cerr << "WARNING: Both --input-threads and --threads specified. The larger value will be used for threading\n";
+        }
+    }
+
     try {
         po::notify(vm);
     }
@@ -56,7 +68,7 @@ Options::Options(int argc, char** argv) {
     }
 }
 
-po::options_description Options::_options_desciption() {
+po::options_description Options::_options_description() {
     po::options_description desc("Available options");
     desc.add_options()
         ("help,h", "produce this message")
@@ -70,7 +82,15 @@ po::options_description Options::_options_desciption() {
         ("max-unmapped-bases", po::value<>(&max_unmapped_bases)->default_value(50), "maximum number of unaligned bases between two alignments to be included in the splitter file")
         ("min-indel-size", po::value<>(&min_indel_size)->default_value(50), "minimum structural variant feature size for split alignments to be included in the splitter file")
         ("min-non-overlap", po::value<>(&min_non_overlap)->default_value(20), "minimum number of non-overlapping base pairs between two alignments for a read to be included in the splitter file")
-        ("input-threads", po::value<>(&input_threads)->default_value(1), "number of threads to use for reading the input. Only useful for CRAM files")
+        ("threads", po::value<>(&threads)->default_value(1), "number of threads to use")
+        ;
+    return desc;
+}
+
+po::options_description Options::_deprecated_options_description() {
+    po::options_description desc("Deprecated options");
+    desc.add_options()
+        ("input-threads", po::value<>(&input_threads)->default_value(1), "number of threads to use")
         ;
     return desc;
 }

@@ -24,25 +24,41 @@ if (NOT ZLIB_FOUND)
 endif (NOT ZLIB_FOUND)
 
 if (HTSLIB_USE_LIBCURL)
-    set(HTSLIB_CONFIGURE_OPTIONS --enable-libcurl)
-    set(HTSLIB_XLIBRARIES curl crypto ssl)
+    set(HTSLIB_CONFIGURE_OPTIONS ${HTSLIB_CONFIGURE_OPTIONS} --enable-libcurl)
+    set(HTSLIB_XLIBRARIES ${HTSLIB_XLIBRARIES} curl crypto ssl)
+else (HTSLIB_USE_LIBCURL)
+    set(HTSLIB_CONFIGURE_OPTIONS ${HTSLIB_CONFIGURE_OPTIONS} --disable-libcurl)
 endif (HTSLIB_USE_LIBCURL)
 
+if (HTSLIB_USE_LZMA)
+    set(HTSLIB_CONFIGURE_OPTIONS ${HTSLIB_CONFIGURE_OPTIONS} --enable-lzma)
+    set(HTSLIB_XLIBRARIES ${HTSLIB_XLIBRARIES} lzma)
+else (HTSLIB_USE_LZMA)
+    set(HTSLIB_CONFIGURE_OPTIONS ${HTSLIB_CONFIGURE_OPTIONS} --disable-lzma)
+endif (HTSLIB_USE_LZMA)
+
+if (HTSLIB_USE_BZ2)
+    set(HTSLIB_CONFIGURE_OPTIONS ${HTSLIB_CONFIGURE_OPTIONS} --enable-bz2)
+    set(HTSLIB_XLIBRARIES ${HTSLIB_XLIBRARIES} bz2)
+else (HTSLIB_USE_BZ2)
+    set(HTSLIB_CONFIGURE_OPTIONS ${HTSLIB_CONFIGURE_OPTIONS} --disable-bz2)
+endif (HTSLIB_USE_BZ2)
+
 ExternalDependency_Add(
-    htslib-1.3.2
+    htslib-1.6
     BUILD_BYPRODUCTS ${HTSLIB_LIB}
     ARGS
-        URL ${CMAKE_SOURCE_DIR}/vendor/htslib-1.3.2.tgz
+        URL ${CMAKE_SOURCE_DIR}/vendor/htslib-1.6.tgz
         SOURCE_DIR ${HTSLIB_ROOT}
         BINARY_DIR ${HTSLIB_ROOT}
-        CONFIGURE_COMMAND ./configure --prefix=${HTSLIB_ROOT} ${HTSLIB_CONFIGURE_OPTIONS} && echo "Building htslib, build log at ${HTSLIB_LOG}"
+        CONFIGURE_COMMAND ./configure --prefix=${HTSLIB_ROOT} ${HTSLIB_CONFIGURE_OPTIONS} --disable-bz2 --disable-lzma && echo "Building htslib, build log at ${HTSLIB_LOG}"
         BUILD_COMMAND make INCLUDES=-I${ZLIB_INCLUDE_DIRS} > ${HTSLIB_LOG} 2>&1
         INSTALL_COMMAND "true"
 )
 
-set(HTSlib_INCLUDE_DIRS ${ZLIB_INCLUDE_DIRS};${HTSLIB_ROOT}/htslib)
+set(HTSlib_INCLUDE_DIRS ${ZLIB_INCLUDE_DIRS};${HTSLIB_ROOT})
 set(HTSlib_LIBRARIES ${HTSLIB_LIB} m ${HTSLIB_XLIBRARIES} ${ZLIB_LIBRARIES})
 
 if (NOT ZLIB_FOUND)
-    add_dependencies(htslib-1.3.2 zlib)
+    add_dependencies(htslib-1.6 zlib)
 endif (NOT ZLIB_FOUND)

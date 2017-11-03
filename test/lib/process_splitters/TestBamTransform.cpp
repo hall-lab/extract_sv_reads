@@ -2,7 +2,7 @@
 #include "TestData.hpp"
 #include "testing/TestBamRecords.hpp"
 
-#include <sam.h>
+#include <htslib/sam.h>
 
 #include <gtest/gtest.h>
 

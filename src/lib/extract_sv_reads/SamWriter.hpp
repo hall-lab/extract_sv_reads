@@ -1,6 +1,8 @@
 #pragma once
 
-#include <sam.h>
+#include "ThreadPool.hpp"
+
+#include <htslib/sam.h>
 
 #include <boost/format.hpp>
 
@@ -10,7 +12,7 @@
 using boost::format;
 class SamWriter {
     public:
-        SamWriter(char const* path, char const* mode, bam_hdr_t const* hdr)
+        SamWriter(char const* path, char const* mode, bam_hdr_t const* hdr, ThreadPool* thread_pool=NULL)
             : path(path)
             , _out(hts_open(path, mode))
             , _hdr(bam_hdr_dup(hdr))
@@ -19,6 +21,13 @@ class SamWriter {
                 throw std::runtime_error(str(format(
                                 "Failed to open output file %1%"
                                 ) % path));
+            }
+            if (thread_pool) {
+                if (hts_set_opt(_out, HTS_OPT_THREAD_POOL, thread_pool->pool()) != 0) {
+                    throw std::runtime_error(str(format(
+                                    "Failed to use threads to write %1%"
+                                    ) % path));
+                }
             }
             if (sam_hdr_write(_out, _hdr) != 0 ) {
                 throw std::runtime_error(str(format(
