@@ -69,7 +69,7 @@ htslib can be linked against curl for interaction with AWS and GCS. In addition,
 sudo apt-get install libbz2-dev liblzma-dev libssl-dev libcurl4-openssl-dev 
 ```
 
-### Compiling
+### Building
 ```
 mkdir extract_sv_reads/build
 cd extract_sv_reads/build
