@@ -62,12 +62,14 @@ Tests should pass. The binary `extract-sv-reads` can then be found under `extrac
 ## Building with additional libraries
 htslib can be linked against curl for interaction with AWS and GCS. In addition, it can be linked with lzma and bz2 for full read support of all types of CRAM files. To enable these features install the following packages.
 
+### Dependencies
 * For APT-based systems (Debian, Ubuntu):
 
 ```
 sudo apt-get install libbz2-dev liblzma-dev libssl-dev libcurl4-openssl-dev 
 ```
 
+### Compiling
 ```
 mkdir extract_sv_reads/build
 cd extract_sv_reads/build
