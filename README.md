@@ -59,12 +59,19 @@ make test
 ```
 Tests should pass. The binary `extract-sv-reads` can then be found under `extract_sv_reads/build/bin`. If you have administrative rights, then run `sudo make install` to install the tool for all users under `/usr/bin`.
 
-## Building with curl
-htslib can be linked against curl if you have the curl-dev packages installed as follows:
+## Building with additional libraries
+htslib can be linked against curl for interaction with AWS and GCS. In addition, it can be linked with lzma and bz2 for full read support of all types of CRAM files. To enable these features install the following packages.
+
+* For APT-based systems (Debian, Ubuntu):
+
+```
+sudo apt-get install libbz2-dev liblzma-dev libssl-dev libcurl4-openssl-dev 
+```
+
 ```
 mkdir extract_sv_reads/build
 cd extract_sv_reads/build
-cmake -DHTSLIB_USE_LIBCURL=1 ..
+cmake -DHTSLIB_USE_LIBCURL=1 -DHTSLIB_USE_LZMA=1 -DHTSLIB_USE_BZ2=1 ..
 make -j
 make test
 ```
