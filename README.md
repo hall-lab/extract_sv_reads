@@ -1,5 +1,5 @@
 [![Version](https://img.shields.io/github/release/hall-lab/extract_sv_reads.svg)](https://github.com/hall-lab/extract_sv_reads/releases)
-[![bioconda-badge](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io)
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/extract-sv-reads/README.html)
 [![DOI](https://zenodo.org/badge/75641367.svg)](https://zenodo.org/badge/latestdoi/75641367)
 [![License](https://img.shields.io/github/license/hall-lab/extract_sv_reads.svg)](LICENSE.txt)
 
