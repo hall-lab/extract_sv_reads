@@ -43,7 +43,7 @@ class SamReader {
             if (_in->format.format == cram) {
                 // CRAM is flexible in terms of what it can decode.
                 // Only ask for what we need
-                uint32_t rf = SAM_FLAG | SAM_QNAME | SAM_RNAME | SAM_POS | SAM_CIGAR | SAM_TLEN | SAM_AUX; 
+                uint32_t rf = SAM_FLAG | SAM_QNAME | SAM_RNAME | SAM_POS | SAM_MAPQ | SAM_CIGAR | SAM_RNEXT | SAM_PNEXT | SAM_TLEN | SAM_AUX | SAM_RGAUX; 
                 if (!reduced) {
                     rf = rf | SAM_SEQ | SAM_QUAL;
                 }
