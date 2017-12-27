@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 
 use POSIX qw/WEXITSTATUS/;
+use Cwd;
 
 my $vtag = "v[0-9]*";
 
@@ -76,10 +77,20 @@ sub commit_hash {
     return git("rev-parse --short HEAD");
 }
 
+sub version_from_directory {
+    my $dir = getcwd();
+    my $ver = "unstable";
+    if ($dir =~ /.+?-([0-9]+\.[0-9]+\.[0-9]+)$/) {
+        $ver = "$1";
+    }
+    return $ver;
+}
+
 if (!is_git_repo) {
+    my $ver = version_from_directory;
     print "-unstable ";
-    print "unstable ";
-    print "nogit\n";
+    print "$ver ";
+    print "unknown\n";
     exit 0;
 }
 
