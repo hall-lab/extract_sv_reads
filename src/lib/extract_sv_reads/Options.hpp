@@ -29,6 +29,8 @@ class Options {
         int max_unmapped_bases;
         int min_indel_size;
 
+        bool ignore_invalid_sa;
+
         int threads;
         // NOTE Deprecated options
         int input_threads;

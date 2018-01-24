@@ -48,14 +48,23 @@ struct Alignment {
 
         if (!tok.extract(chrom)) {
             throw std::runtime_error(str(format(
-                            "Error parsing chromomsome name from SA tag %1%"
+                            "Error parsing chromosome name from SA tag %1%"
                             ) % sa_tag));
         }
-        if (!tok.extract(rapos)) {
+
+        int64_t tmp_pos;
+        if (!tok.extract(tmp_pos)) {
             throw std::runtime_error(str(format(
                             "Error parsing position from SA tag %1%"
                             ) % sa_tag));
         }
+        if (tmp_pos < 0) {
+            // SA is actually unmapped/reported incorrectly
+            strand = '*'; // we will use this as a convention to indicate an unmapped read
+            return;
+        }
+        rapos = (uint32_t) tmp_pos;
+
         if (!tok.extract(strand)) {
             throw std::runtime_error(str(format(
                             "Error parsing strand from SA tag %1%"

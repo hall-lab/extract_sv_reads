@@ -44,6 +44,21 @@ namespace {
                     if (tok.next_delim() == end) {
                         Alignment first(aln, reader.header());
                         Alignment second(first_sa.data(), first_sa.data() + first_sa.size());
+                        // Handle the case where the position is negative
+                        // This happens in early version of 10X Genomics Lariat Aligner
+                        // It is a bug and the SA tag should never have been populated
+                        // See https://github.com/hall-lab/extract_sv_reads/issues/8
+                        if (second.strand == '*') {
+                            if (opts.ignore_invalid_sa) {
+                                continue;
+                            }
+                            else {
+                                std::string bad_sa_tag(first_sa.data(), first_sa.size());
+                                throw std::runtime_error(str(format(
+                                                "Error parsing position from SA tag %1%"
+                                                ) % bad_sa_tag));
+                            }
+                        }
 
                         Alignment const* left = &first;
                         Alignment const* right = &second;
