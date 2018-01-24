@@ -67,6 +67,36 @@ class TestExtractSvReads(IntegrationTest, unittest.TestCase):
         self.assertFilesEqual(expected_splitter_file, output_splitter_file)
         self.assertFilesEqual(expected_discordant_file, output_discordant_file)
 
+    def test_program_stop_on_neg_sa(self):
+        expected_splitter_file = "expected_nodups.splitters.sorted.shrunk.bam"
+        expected_discordant_file = "expected_nodups.discordants.sorted.shrunk.bam"
+        output_splitter_file = self.tempFile("splitters.bam")
+        output_discordant_file = self.tempFile("discordants.bam")
+        input_bam = "integration_test_w_neg_sa.bam"
+        cmdline = " ".join([self.exe_path, '-r', '-e', '-i', input_bam, '-s', output_splitter_file, '-d', output_discordant_file])
+        print "Executing: ", cmdline
+        print "CWD: ", os.getcwd()
+
+        rv = subprocess.call(cmdline, shell=True)
+        print "Return value: ", rv
+        self.assertNotEqual(0, rv)
+
+    def test_program_ignore_neg_sa(self):
+        expected_splitter_file = "expected_nodups.splitters.sorted.shrunk.bam"
+        expected_discordant_file = "expected_nodups.discordants.sorted.shrunk.bam"
+        output_splitter_file = self.tempFile("splitters.bam")
+        output_discordant_file = self.tempFile("discordants.bam")
+        input_bam = "integration_test_w_neg_sa.bam"
+        cmdline = " ".join([self.exe_path, '-r', '-e', '--ignore-invalid-sa', '-i', input_bam, '-s', output_splitter_file, '-d', output_discordant_file])
+        print "Executing: ", cmdline
+        print "CWD: ", os.getcwd()
+
+        rv = subprocess.call(cmdline, shell=True)
+        print "Return value: ", rv
+        self.assertEqual(0, rv)
+        self.assertFilesEqual(expected_splitter_file, output_splitter_file)
+        # NOTE Only evaluating splitters since the extra read we added will
+        # cause a diff in discordants and we don't actually care
 
 if __name__ == "__main__":
     main()

@@ -52,6 +52,14 @@ TEST_F(TestAlignment, create_from_truncated_sa) {
     ASSERT_THROW(Alignment test_obj(beg, end), std::runtime_error);
 }
 
+TEST_F(TestAlignment, create_from_sa_with_neg_pos) {
+    std::string data("2,-1,+,66S35M,21,1");
+    char const* beg = data.data();
+    char const* end = data.data() + data.size();
+    Alignment test_obj(beg, end);
+    ASSERT_EQ('*', test_obj.strand);
+}
+
 TEST_F(TestAlignment, calculate_additional_offsets) {
     AlignmentOffsets data("2H5S10M2D5M3I5M4S");
     Alignment test_obj;
