@@ -12,6 +12,8 @@ The purpose of this program is to extract splitter and discordant reads from a C
 # Usage Notes
 Splitters and discordants are output in BAM files. Duplicates are included by default, but can be excluded using the `-e` option. As of version 1.2.0, threading affects the performance of both BAM and CRAM files and specifying more than one thread will speed up the program significantly. CRAM is supported as an input format, however, I highly recommend that when running on a CRAM file the `-T` option is utilized. The `-T` option prevents htslib from downloading the reference sequence used to encode the CRAM to the `REF_CACHE` location. By default, this is in the current user's home directory and may prove problematic for those with smallish home directories. See the [htslib documentation](http://www.htslib.org/workflow/) for more information.
 
+As of version 1.3.0, a new option `--ignore-invalid-sa` is available. This option specifically ignores split read alignments where the SA tag contains a negative position. These tags have been observed in versions of 10x Genomics' Lariat aligner, but have been reported and will be fixed in subsequent releases. By default, `extract-sv-reads` will report an error on encountering SA tags with negative positions. However, if you are confident that this is because of the aforementioned bug in Lariat, then you should be able to generate valid output by using the `--ignore-invalid-sa` option and proceed.
+
 # Credits
 This program is heavily based on code from [SAMBLASTER](https://github.com/GregoryFaust/samblaster), unpublished code from [Ryan Layer](https://github.com/ryanlayer) and code written by [Travis Abbott](https://github.com/tabbott) in [diagnose_dups](https://github.com/genome/diagnose_dups).
 
