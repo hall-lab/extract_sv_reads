@@ -79,6 +79,7 @@ po::options_description Options::_options_description() {
         ("reference,T", po::value<>(&reference), "reference sequence used to encode CRAM file, recommended if reading CRAM")
         ("exclude-dups,e", po::bool_switch(&exclude_dups)->default_value(false), "exclude duplicate reads from output")
         ("reduce-output-bams,r", po::bool_switch(&shrink_bam)->default_value(false), "remove sequences and qualities from output bams")
+        ("with-nm,n", po::bool_switch(&needs_nm)->default_value(false), "ensure NM tag is present in output if reading CRAM file")
         ("max-unmapped-bases", po::value<>(&max_unmapped_bases)->default_value(50), "maximum number of unaligned bases between two alignments to be included in the splitter file")
         ("min-indel-size", po::value<>(&min_indel_size)->default_value(50), "minimum structural variant feature size for split alignments to be included in the splitter file")
         ("min-non-overlap", po::value<>(&min_non_overlap)->default_value(20), "minimum number of non-overlapping base pairs between two alignments for a read to be included in the splitter file")
