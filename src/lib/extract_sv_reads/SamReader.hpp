@@ -13,7 +13,7 @@
 
 class SamReader {
     public:
-        SamReader(char const* path, char const* reference=NULL, ThreadPool* thread_pool=NULL, bool reduced=false)
+        SamReader(char const* path, char const* reference=NULL, ThreadPool* thread_pool=NULL, bool reduced=false, bool needs_nm = true)
             : _in(hts_open(path, "r"))
             , _required_flags(0)
             , _skip_flags(0)
@@ -47,6 +47,9 @@ class SamReader {
                 if (!reduced) {
                     rf = rf | SAM_SEQ | SAM_QUAL;
                 }
+                else if (needs_nm) {
+                    rf = rf | SAM_SEQ;
+                }
 
                 if (hts_set_opt(_in, CRAM_OPT_REQUIRED_FIELDS, rf) != 0) {
                     throw std::runtime_error(str(format(
@@ -54,10 +57,13 @@ class SamReader {
                                     ) % path));
                 }
 
-                if (hts_set_opt(_in, CRAM_OPT_DECODE_MD, 0) != 0) {
-                    throw std::runtime_error(str(format(
-                                    "Unable to set MD tag decoding off on %1%"
-                                    ) % path));
+                // If we need the NM tag then we will need to decode MD
+                if (!needs_nm) {
+                    if (hts_set_opt(_in, CRAM_OPT_DECODE_MD, 0) != 0) {
+                        throw std::runtime_error(str(format(
+                                        "Unable to set MD tag decoding off on %1%"
+                                        ) % path));
+                    }
                 }
             }
 

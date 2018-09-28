@@ -25,6 +25,7 @@ class Options {
 
         bool exclude_dups;
         bool shrink_bam;
+        bool needs_nm;
         int min_non_overlap;
         int max_unmapped_bases;
         int min_indel_size;
