@@ -1,3 +1,8 @@
+# Notice
+This project is no longer maintained. Any logical and performance differences between this program and the [lumpy_filter](https://github.com/arq5x/lumpy-sv/tree/master/src/filter) program maintained as part of lumpy-sv have been addressed. You should move to using lumpy_filter. The easiest way to do so is to use [smoove](https://github.com/brentp/smoove).
+
+---
+
 [![Version](https://img.shields.io/github/release/hall-lab/extract_sv_reads.svg)](https://github.com/hall-lab/extract_sv_reads/releases)
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io/recipes/extract-sv-reads/README.html)
 [![DOI](https://zenodo.org/badge/75641367.svg)](https://zenodo.org/badge/latestdoi/75641367)
